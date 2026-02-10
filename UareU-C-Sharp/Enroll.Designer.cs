@@ -74,6 +74,7 @@
             this.Text = "Enroll";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Enroll_FormClosed);
             this.Load += new System.EventHandler(this.Enroll_Load);
+            this.Shown += new System.EventHandler(this.Enroll_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.enrollPicBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

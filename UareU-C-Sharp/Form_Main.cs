@@ -16,6 +16,7 @@ namespace UareUWindowsMSSQLCSharp
     public partial class Form_Main : Form
     {
         private Reader reader;
+        private string xmlHuellaFinal = string.Empty;
         //private string cadenaConexion = @"Data Source=DESKTOP-KUBF2IC\SQLEXPRESS;Initial Catalog=Gimnasio;Integrated Security=True";
         private string cadenaConexion;
         public Reader GetReader
@@ -59,8 +60,12 @@ namespace UareUWindowsMSSQLCSharp
                 string nombre_archivo_huella = tbNombre.Text.Replace(" ", "") + "_" + tbEdad.Text.Replace(" ", "") + "_" + cbSexo.SelectedValue;
                 Enroll enrollForm = new Enroll(nombre_archivo_huella);
                 enrollForm._sender = this;
-                enrollForm.ShowDialog();
-                tbHuella.Text = @"C:\conf_gympack\huella\" + nombre_archivo_huella + ".bmp";
+                //enrollForm.ShowDialog();
+                if (enrollForm.ShowDialog() == DialogResult.OK)
+                {
+                    xmlHuellaFinal = Fmd.SerializeXml(enrollForm.EnrollmentFmdResult);
+                }
+                    tbHuella.Text = @"C:\conf_gympack\huella\" + nombre_archivo_huella + ".bmp";
             }
             else 
             {
@@ -119,8 +124,15 @@ namespace UareUWindowsMSSQLCSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(xmlHuellaFinal))
+            {
+                MessageBox.Show("Por favor, capture la huella del socio antes de guardar.");
+                return;
+            }
+
             try
             {
+                
                 // Crear la conexión
                 using (SqlConnection conexion = new SqlConnection(cadenaConexion))
                 {
@@ -129,25 +141,29 @@ namespace UareUWindowsMSSQLCSharp
 
                     // Crear el comando SQL
 
-                    string consulta = "INSERT INTO Clientes (Nombre,Sexo,Edad,Huella) VALUES('" + tbNombre.Text + "', '" + cbSexo.SelectedItem + "', " + tbEdad.Text + ", '" + tbHuella.Text + "')";
-                    using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                    string sql = "INSERT INTO Clientes (Nombre,Sexo,Edad,Huella,HuellaXml) VALUES(@nombre,@sexo,@edad,@huella,@huellaXml)";
+                    SqlCommand cmd = new SqlCommand(sql, conexion);
+                    cmd.Parameters.AddWithValue("@nombre", tbNombre.Text);
+                    cmd.Parameters.AddWithValue("@edad", tbEdad.Text);
+                    cmd.Parameters.AddWithValue("@sexo", cbSexo.SelectedItem);
+                    cmd.Parameters.AddWithValue("@huella", tbHuella.Text);
+                    cmd.Parameters.AddWithValue("@huellaXml", xmlHuellaFinal);
+                    
+                    int filasAfectadas = cmd.ExecuteNonQuery();
+
+                    if (filasAfectadas > 0)
                     {
-
-                        int filasAfectadas = comando.ExecuteNonQuery();
-
-                        if (filasAfectadas > 0)
-                        {
-                            MessageBox.Show("CLIENTE GUARDADO CORRECTAMENTE.");
-                            tbNombre.Text = "";
-                            tbHuella.Text = "";
-                            tbEdad.Text = "";
-                            cbSexo.SelectedIndex = 0;
-                            load_dgvClientes();
-                        }
-                        else
-                        {
-                            MessageBox.Show("ERROR AL GUARDAR CLIENTE.");
-                        }
+                        MessageBox.Show("CLIENTE GUARDADO CORRECTAMENTE.");
+                        tbNombre.Text = "";
+                        tbHuella.Text = "";
+                        tbEdad.Text = "";
+                        cbSexo.SelectedIndex = 0;
+                        xmlHuellaFinal = string.Empty;
+                        load_dgvClientes();
+                    }
+                    else
+                    {
+                        MessageBox.Show("ERROR AL GUARDAR CLIENTE.");
                     }
                     conexion.Close();
                 }
