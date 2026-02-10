@@ -39,11 +39,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.dgvClientes = new System.Windows.Forms.DataGridView();
-            this.cbSexo = new System.Windows.Forms.ComboBox();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sexo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.edad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.huella = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbSexo = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,13 +92,13 @@
             // 
             this.tbNombre.Location = new System.Drawing.Point(616, 57);
             this.tbNombre.Name = "tbNombre";
-            this.tbNombre.Size = new System.Drawing.Size(320, 20);
+            this.tbNombre.Size = new System.Drawing.Size(444, 20);
             this.tbNombre.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(554, 98);
+            this.label2.Location = new System.Drawing.Point(654, 98);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 6;
@@ -105,7 +106,7 @@
             // 
             // tbEdad
             // 
-            this.tbEdad.Location = new System.Drawing.Point(616, 95);
+            this.tbEdad.Location = new System.Drawing.Point(716, 95);
             this.tbEdad.MaxLength = 99;
             this.tbEdad.Name = "tbEdad";
             this.tbEdad.Size = new System.Drawing.Size(79, 20);
@@ -116,13 +117,13 @@
             this.tbHuella.Location = new System.Drawing.Point(687, 130);
             this.tbHuella.Name = "tbHuella";
             this.tbHuella.ReadOnly = true;
-            this.tbHuella.Size = new System.Drawing.Size(249, 20);
+            this.tbHuella.Size = new System.Drawing.Size(373, 20);
             this.tbHuella.TabIndex = 9;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(729, 98);
+            this.label3.Location = new System.Drawing.Point(829, 98);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 10;
@@ -130,7 +131,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(629, 205);
+            this.button1.Location = new System.Drawing.Point(732, 205);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(188, 51);
             this.button1.TabIndex = 5;
@@ -145,22 +146,13 @@
             this.id,
             this.nombre,
             this.sexo,
-            this.edad});
+            this.edad,
+            this.huella});
             this.dgvClientes.Location = new System.Drawing.Point(4, 6);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.Size = new System.Drawing.Size(547, 344);
             this.dgvClientes.TabIndex = 100;
-            // 
-            // cbSexo
-            // 
-            this.cbSexo.FormattingEnabled = true;
-            this.cbSexo.Items.AddRange(new object[] {
-            "M",
-            "F"});
-            this.cbSexo.Location = new System.Drawing.Point(782, 94);
-            this.cbSexo.Name = "cbSexo";
-            this.cbSexo.Size = new System.Drawing.Size(121, 21);
-            this.cbSexo.TabIndex = 3;
+            this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_CellDoubleClick);
             // 
             // id
             // 
@@ -187,11 +179,29 @@
             this.edad.Name = "edad";
             this.edad.ReadOnly = true;
             // 
+            // huella
+            // 
+            this.huella.HeaderText = "HUELLA";
+            this.huella.Name = "huella";
+            this.huella.ReadOnly = true;
+            this.huella.Visible = false;
+            // 
+            // cbSexo
+            // 
+            this.cbSexo.FormattingEnabled = true;
+            this.cbSexo.Items.AddRange(new object[] {
+            "M",
+            "F"});
+            this.cbSexo.Location = new System.Drawing.Point(882, 94);
+            this.cbSexo.Name = "cbSexo";
+            this.cbSexo.Size = new System.Drawing.Size(121, 21);
+            this.cbSexo.TabIndex = 3;
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(957, 362);
+            this.ClientSize = new System.Drawing.Size(1084, 362);
             this.Controls.Add(this.cbSexo);
             this.Controls.Add(this.dgvClientes);
             this.Controls.Add(this.button1);
@@ -206,7 +216,6 @@
             this.Controls.Add(this.enrollbtn);
             this.Name = "Form_Main";
             this.Text = "Main";
-            this.Load += new System.EventHandler(this.Form_Main_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -231,6 +240,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn nombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn sexo;
         private System.Windows.Forms.DataGridViewTextBoxColumn edad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn huella;
     }
 }
 

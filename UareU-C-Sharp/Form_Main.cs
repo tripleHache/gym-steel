@@ -102,6 +102,7 @@ namespace UareUWindowsMSSQLCSharp
                                 nuevaFila.Cells[1].Value = lector["Nombre"].ToString();
                                 nuevaFila.Cells[2].Value = lector["Sexo"].ToString();
                                 nuevaFila.Cells[3].Value = lector["Edad"].ToString();
+                                nuevaFila.Cells[4].Value = lector["Huella"].ToString();
                                 dgvClientes.Rows.Add(nuevaFila);
                             }
                         }
@@ -158,9 +159,36 @@ namespace UareUWindowsMSSQLCSharp
             }
         }
 
-        private void Form_Main_Load(object sender, EventArgs e)
+        private void dgvClientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            // Verificamos que el clic sea en una fila y no en el encabezado (índice -1)
+            if (e.RowIndex >= 0)
+            {
+                // Obtener la fila completa
+                DataGridViewRow row = dgvClientes.Rows[e.RowIndex];
+                // Pintar de amarillo
+                row.DefaultCellStyle.BackColor = Color.Yellow;
+                // Extraer los datos por nombre de columna o por índice
+                string id = row.Cells["id"].Value.ToString();
+                string nombre = row.Cells["nombre"].Value.ToString();
+                string sexo = row.Cells["sexo"].Value.ToString();
+                string edad = row.Cells["edad"].Value.ToString();
+                string huella = row.Cells["huella"].Value.ToString();
 
+                // Ejemplo: Mostrar los datos o pasarlos a otro formulario
+                tbNombre.Text = nombre;
+                if (sexo == "M")
+                {
+                    cbSexo.SelectedIndex = 0;
+                }
+                else if (sexo == "F")
+                {
+                    cbSexo.SelectedIndex = 1;
+                }
+                tbEdad.Text = edad;
+                button1.Text = "MODIFICAR CLIENTE";
+                tbHuella.Text = huella;
+            }
         }
     }
 }
