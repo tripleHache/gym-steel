@@ -25,7 +25,7 @@ namespace UareUWindowsMSSQLCSharp
             {
                 return reader;
             }
-        
+
         }
         public Form_Main()
         {
@@ -41,7 +41,7 @@ namespace UareUWindowsMSSQLCSharp
             //application
             // HelperFunctions.LoadAllUsers();
         }
-   
+
         private void CheckReaderPluggedin()
         {
             ReaderCollection rc = ReaderCollection.GetReaders();
@@ -65,9 +65,9 @@ namespace UareUWindowsMSSQLCSharp
                 {
                     xmlHuellaFinal = Fmd.SerializeXml(enrollForm.EnrollmentFmdResult);
                 }
-                    tbHuella.Text = @"C:\conf_gympack\huella\" + nombre_archivo_huella + ".bmp";
+                tbHuella.Text = @"C:\conf_gympack\huella\" + nombre_archivo_huella + ".bmp";
             }
-            else 
+            else
             {
                 MessageBox.Show("Es necesario que capture todos los datos del usuario");
             }
@@ -124,6 +124,17 @@ namespace UareUWindowsMSSQLCSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (button1.Text == "GUARDAR CLIENTE")
+            {
+                GuardarCliente();
+            }
+            else
+            {
+                modificarCliente(Convert.ToInt32(tbidCliente.Text));
+            }
+        }
+        private void GuardarCliente()
+        {
             if (string.IsNullOrEmpty(xmlHuellaFinal))
             {
                 MessageBox.Show("Por favor, capture la huella del socio antes de guardar.");
@@ -132,15 +143,12 @@ namespace UareUWindowsMSSQLCSharp
 
             try
             {
-                
+
                 // Crear la conexión
                 using (SqlConnection conexion = new SqlConnection(cadenaConexion))
                 {
                     // Abrir la conexión
                     conexion.Open();
-
-                    // Crear el comando SQL
-
                     string sql = "INSERT INTO Clientes (Nombre,Sexo,Edad,Huella,HuellaXml) VALUES(@nombre,@sexo,@edad,@huella,@huellaXml)";
                     SqlCommand cmd = new SqlCommand(sql, conexion);
                     cmd.Parameters.AddWithValue("@nombre", tbNombre.Text);
@@ -148,7 +156,7 @@ namespace UareUWindowsMSSQLCSharp
                     cmd.Parameters.AddWithValue("@sexo", cbSexo.SelectedItem);
                     cmd.Parameters.AddWithValue("@huella", tbHuella.Text);
                     cmd.Parameters.AddWithValue("@huellaXml", xmlHuellaFinal);
-                    
+
                     int filasAfectadas = cmd.ExecuteNonQuery();
 
                     if (filasAfectadas > 0)
@@ -174,7 +182,54 @@ namespace UareUWindowsMSSQLCSharp
                 MessageBox.Show(ex.Message);
             }
         }
+        private void modificarCliente(int idCliente)
+        {
+            if (string.IsNullOrEmpty(xmlHuellaFinal))
+            {
+                MessageBox.Show("Por favor, capture la huella del socio antes de modificar.");
+                return;
+            }
 
+            try
+            {
+                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+                {
+                    // Abrir la conexión
+                    conexion.Open();
+                    string sql = "UPDATE Clientes SET Nombre = @nombre,Sexo = @sexo,Edad = @edad, Huella = @huella, HuellaXml = @huellaXml WHERE idCliente = @idcliente;";
+                    SqlCommand cmd = new SqlCommand(sql, conexion);
+                    cmd.Parameters.AddWithValue("@idcliente", idCliente);
+                    cmd.Parameters.AddWithValue("@nombre", tbNombre.Text);
+                    cmd.Parameters.AddWithValue("@edad", tbEdad.Text);
+                    cmd.Parameters.AddWithValue("@sexo", cbSexo.SelectedItem);
+                    cmd.Parameters.AddWithValue("@huella", tbHuella.Text);
+                    cmd.Parameters.AddWithValue("@huellaXml", xmlHuellaFinal);
+
+                    int filasAfectadas = cmd.ExecuteNonQuery();
+
+                    if (filasAfectadas > 0)
+                    {
+                        MessageBox.Show("CLIENTE MODIFICADO CORRECTAMENTE.");
+                        tbNombre.Text = "";
+                        tbHuella.Text = "";
+                        tbEdad.Text = "";
+                        cbSexo.SelectedIndex = 0;
+                        xmlHuellaFinal = string.Empty;
+                        load_dgvClientes();
+                    }
+                    else
+                    {
+                        MessageBox.Show("ERROR AL MODIFICAR CLIENTE.");
+                    }
+                    conexion.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al consultar la base de datos: " + ex.Message);
+                MessageBox.Show(ex.Message);
+            }
+        }
         private void dgvClientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // Verificamos que el clic sea en una fila y no en el encabezado (índice -1)
@@ -192,6 +247,7 @@ namespace UareUWindowsMSSQLCSharp
                 string huella = row.Cells["huella"].Value.ToString();
 
                 // Ejemplo: Mostrar los datos o pasarlos a otro formulario
+                tbidCliente.Text = id;
                 tbNombre.Text = nombre;
                 if (sexo == "M")
                 {

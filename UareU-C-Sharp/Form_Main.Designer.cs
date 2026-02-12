@@ -45,6 +45,7 @@
             this.edad = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.huella = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbSexo = new System.Windows.Forms.ComboBox();
+            this.tbidCliente = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -197,11 +198,21 @@
             this.cbSexo.Size = new System.Drawing.Size(121, 21);
             this.cbSexo.TabIndex = 3;
             // 
+            // tbidCliente
+            // 
+            this.tbidCliente.Location = new System.Drawing.Point(616, 21);
+            this.tbidCliente.MaxLength = 99;
+            this.tbidCliente.Name = "tbidCliente";
+            this.tbidCliente.Size = new System.Drawing.Size(79, 20);
+            this.tbidCliente.TabIndex = 101;
+            this.tbidCliente.Visible = false;
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 362);
+            this.Controls.Add(this.tbidCliente);
             this.Controls.Add(this.cbSexo);
             this.Controls.Add(this.dgvClientes);
             this.Controls.Add(this.button1);
@@ -241,6 +252,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn sexo;
         private System.Windows.Forms.DataGridViewTextBoxColumn edad;
         private System.Windows.Forms.DataGridViewTextBoxColumn huella;
+        private System.Windows.Forms.TextBox tbidCliente;
     }
 }
 

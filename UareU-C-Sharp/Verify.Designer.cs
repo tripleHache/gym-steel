@@ -38,6 +38,7 @@
             this.lblCliente = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.lblVencimiento = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.verifyPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -78,7 +79,6 @@
             this.Loadbtn.Text = "Load Image";
             this.Loadbtn.UseVisualStyleBackColor = true;
             this.Loadbtn.Visible = false;
-            this.Loadbtn.Click += new System.EventHandler(this.Loadbtn_Click);
             // 
             // pictureBox1
             // 
@@ -98,7 +98,6 @@
             this.label1.Size = new System.Drawing.Size(564, 42);
             this.label1.TabIndex = 4;
             this.label1.Text = "Bienvenido a GYM STEEL & Co.";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // lblCliente
             // 
@@ -131,14 +130,25 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.pictureBox1);
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblVencimiento);
             this.splitContainer1.Panel2.Controls.Add(this.lblCliente);
             this.splitContainer1.Size = new System.Drawing.Size(549, 513);
             this.splitContainer1.SplitterDistance = 353;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // lblVencimiento
+            // 
+            this.lblVencimiento.AutoSize = true;
+            this.lblVencimiento.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVencimiento.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lblVencimiento.Location = new System.Drawing.Point(24, 109);
+            this.lblVencimiento.Name = "lblVencimiento";
+            this.lblVencimiento.Size = new System.Drawing.Size(0, 37);
+            this.lblVencimiento.TabIndex = 6;
+            this.lblVencimiento.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Verify
             // 
@@ -183,6 +193,7 @@
         private System.Windows.Forms.Label lblCliente;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label lblVencimiento;
     }
 }
 

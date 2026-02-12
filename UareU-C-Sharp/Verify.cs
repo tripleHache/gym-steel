@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace UareUWindowsMSSQLCSharp
 {
@@ -16,12 +17,9 @@ namespace UareUWindowsMSSQLCSharp
         private Reader reader;
         private DataResult<Fmd> enrolledFmd = null;
         private Fmd fmd = null;
-        private List<Fmd> preEnrollmentFmd, preEnrollmentFmd1;
-        private List<Fmd> enrolledFmdList = new List<Fmd>();
-        //public Form_Main _sender;
+        private List<Fmd> preEnrollmentFmd;
+        private List<ClienteHuella> enrolledFmdList = new List<ClienteHuella>();
         public MENU _sender;
-        // DataResult<Fmd> fpDataFmd = new DataResult<Fmd>; 
-        //private string cadenaConexion = @"Data Source=DESKTOP-EJ8LAN6\SQLEXPRESS;Initial Catalog=Gimnasio;Integrated Security=True";
         private string cadenaConexion;
 
 
@@ -37,7 +35,6 @@ namespace UareUWindowsMSSQLCSharp
             InitializeReaders();
 
             Constants.ResultCode result = reader.GetStatus();
-            //CheckReaderStatus();
             if (result == Constants.ResultCode.DP_SUCCESS)
             {
                 if (reader.Status.Status == Constants.ReaderStatuses.DP_STATUS_READY)
@@ -51,38 +48,56 @@ namespace UareUWindowsMSSQLCSharp
             {
                 VerifyMessageLbl.Text = "Could not perform capture. Reader result code :" + result.ToString();
             }
-
-            // ComparacionHuellas();
-
-            using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+            try
             {
-                conexion.Open();
-                string consulta = "EXEC Clientes_activos;";
-                using (SqlCommand comando = new SqlCommand(consulta, conexion))
+                using (SqlConnection conexion = new SqlConnection(cadenaConexion))
                 {
-                    using (SqlDataReader lector = comando.ExecuteReader())
+                    conexion.Open();
+                    string consulta = "EXEC Clientes_activos;";
+                    using (SqlCommand comando = new SqlCommand(consulta, conexion))
                     {
-                        enrolledFmdList.Clear();
-                        while (lector.Read())
+                        using (SqlDataReader lector = comando.ExecuteReader())
                         {
-
-                            string url = lector["Huella"].ToString();
-                            using (Bitmap img = new Bitmap(url))
+                            enrolledFmdList.Clear();
+                            while (lector.Read())
                             {
-                                DataResult<Fmd> fmdfromBMP = ExtractFmdfromBmp(img);
-                                //DataResult<Fmd> fmdfromBMP = ExtractFmdfromByte((byte[])lector["HuellaBinaria"]);
-                                enrolledFmdList.Add(fmdfromBMP.Data);
+                                string fmdXml = lector["HuellaXml"].ToString();
+                                string nombreCliente = lector["Nombre"].ToString();
+                                DateTime fechaVenc = Convert.ToDateTime(lector["Vigencia"]);
+                                if (!string.IsNullOrEmpty(fmdXml))
+                                {
+                                    try
+                                    {
+                                        // 2. Deserializamos directamente usando el método del SDK
+                                        Fmd fmdCargada = Fmd.DeserializeXml(fmdXml);
+
+                                        // 3. Agregamos a la lista de comparación
+                                        //enrolledFmdList.Add(fmdCargada);
+                                        enrolledFmdList.Add(new ClienteHuella
+                                        {
+                                            Nombre = nombreCliente,
+                                            Huella = fmdCargada,
+                                            FechaVencimiento = fechaVenc
+                                        });
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // Por si algún XML está corrupto, que no se detenga la carga
+                                        Console.WriteLine("Error deserializando una huella: " + ex.Message);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al conectar a la base de datos: " + ex.Message);
+            }
 
 
         }
-
-      
-
         private void InitializeReaders()
         {
             ReaderCollection rc = ReaderCollection.GetReaders();
@@ -136,65 +151,76 @@ namespace UareUWindowsMSSQLCSharp
                 if (fmd != null)
                 {
                     bool boolValidacion = false;
-                   
-                                IdentifyResult vResult = Comparison.Identify(fmd, 0, enrolledFmdList, 21474, 5);
-                                if (vResult.ResultCode == Constants.ResultCode.DP_SUCCESS)
-                                {
-                                    if (vResult.Indexes.Length > 0)
-                                    {
-                                        boolValidacion = true;
-                                    }
-                                    else
-                                    {
-                                        boolValidacion = false;
-                                    }
-                                }
-                                else
-                                {
-                                    UpdateVerifyMessage("Error occured on verfication.", null, "");
-                                }
 
-                                if (boolValidacion)
-                                {                                 
-                                        try
-                                        {
-                                            string rutaImagen = @"C:\conf_gympack\check2.jpeg";
-                                            Image img2 = Image.FromFile(rutaImagen);
-                                            pictureBox1.Image = img2;
-                                            Thread.Sleep(2000);
-                                            pictureBox1.Image = null;
-                                            UpdateVerifyMessage("", null, "");
-                                        }
-                                        catch (System.IO.FileNotFoundException)
-                                        {
-                                            MessageBox.Show("No se encontró el archivo de imagen.");
-                                        }
-                                        catch (System.NotSupportedException)
-                                        {
-                                            MessageBox.Show("Formato de ruta no válido.");
-                                        }
-                                  
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        string rutaImagen = @"C:\conf_gympack\fail2.jpeg";
-                                        Image img2 = Image.FromFile(rutaImagen);
-                                        pictureBox1.Image = img2;
-                                        Thread.Sleep(2000);
-                                        pictureBox1.Image = null;
-                                        UpdateVerifyMessage("", null, "");
-                                    }
-                                    catch (System.IO.FileNotFoundException)
-                                    {
-                                        MessageBox.Show("No se encontró el archivo de imagen.");
-                                    }
-                                    catch (System.NotSupportedException)
-                                    {
-                                        MessageBox.Show("Formato de ruta no válido.");
-                                    }
-                                }
+                    List<Fmd> fmdsParaComparar = enrolledFmdList.Select(c => c.Huella).ToList();
+                    IdentifyResult vResult = Comparison.Identify(fmd, 0, fmdsParaComparar, 21474, 5);
+                    if (vResult.ResultCode == Constants.ResultCode.DP_SUCCESS)
+                    {
+                        if (vResult.Indexes.Length > 0)
+                        {
+                            boolValidacion = true;
+                            int indiceEncontrado = vResult.Indexes[0][0];
+                            var cliente = enrolledFmdList[indiceEncontrado];
+
+                            string nombreEncontrado = cliente.Nombre;
+                            DateTime vencimiento = cliente.FechaVencimiento;
+                            this.Invoke(new Action(() => {
+                                lblCliente.Text = "Cliente: " + nombreEncontrado;
+                                lblVencimiento.Text = "Vigente hasta el: " + vencimiento.ToString("dd/MM/yyyy");
+                                VerifyMessageLbl.Text = "¡Acceso Autorizado!";
+                            }));
+                        }
+                        else
+                        {
+                            boolValidacion = false;
+                        }
+                    }
+                    else
+                    {
+                        UpdateVerifyMessage("Error occured on verfication.", null, "");
+                    }
+
+                    if (boolValidacion)
+                    {
+                        try
+                        {
+                            string rutaImagen = @"C:\conf_gympack\check2.jpeg";
+                            Image img2 = Image.FromFile(rutaImagen);
+                            pictureBox1.Image = img2;
+                            Thread.Sleep(2000);
+                            pictureBox1.Image = null;
+                            UpdateVerifyMessage("", null, "");
+                        }
+                        catch (System.IO.FileNotFoundException)
+                        {
+                            MessageBox.Show("No se encontró el archivo de imagen.");
+                        }
+                        catch (System.NotSupportedException)
+                        {
+                            MessageBox.Show("Formato de ruta no válido.");
+                        }
+
+                    }
+                    else
+                    {
+                        try
+                        {
+                            string rutaImagen = @"C:\conf_gympack\fail2.jpeg";
+                            Image img2 = Image.FromFile(rutaImagen);
+                            pictureBox1.Image = img2;
+                            Thread.Sleep(2000);
+                            pictureBox1.Image = null;
+                            UpdateVerifyMessage("", null, "");
+                        }
+                        catch (System.IO.FileNotFoundException)
+                        {
+                            MessageBox.Show("No se encontró el archivo de imagen.");
+                        }
+                        catch (System.NotSupportedException)
+                        {
+                            MessageBox.Show("Formato de ruta no válido.");
+                        }
+                    }
                             
                         
                     
@@ -372,6 +398,7 @@ namespace UareUWindowsMSSQLCSharp
             {
                 VerifyMessageLbl.Text = text;
                 lblCliente.Text = text2;
+                lblVencimiento.Text = "";
                 if (image != null)
                 {
                     verifyPicBox.Image = image;
@@ -396,65 +423,18 @@ namespace UareUWindowsMSSQLCSharp
             }
         }
 
-        private void ComparacionHuellas()
+        private Fmd DeserializarFmdXml(string xmlString)
         {
-            string directorio = @"C:\Users\H_399\Pictures\huella"; // Reemplaza con la ruta de tu directorio
-
-            // Obtener todos los archivos .bmp en el directorio
-            string[] archivosBMP = Directory.GetFiles(directorio, "*.bmp");
-            enrolledFmdList.Clear();
-            foreach (string archivo in archivosBMP)
+            try
             {
-                try
-                {
-                    Bitmap img = new Bitmap(archivo);
-                    //Extract Fmd from bmp image saved
-                    
-                    DataResult<Fmd> fmdfromBMP = ExtractFmdfromBmp(img);
-                    enrolledFmdList.Add(fmdfromBMP.Data);
-                    //break;
-                    //reader.On_Captured += new Reader.CaptureCallback(reader_On_Captured);
-                    //VerificationCapture();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al procesar {archivo}: {ex.Message}");
-                }
+                // El SDK convierte el string XML directamente al objeto Fmd
+                return Fmd.DeserializeXml(xmlString);
             }
-            reader.On_Captured += new Reader.CaptureCallback(reader_On_Captured);
-            VerificationCapture();
-        }
-
-        private void Loadbtn_Click(object sender, EventArgs e)
-        {
-            //ComparacionHuellas();
-            //openFileDialog1.Filter = "Bitmap Files(*.bmp;*.jpg;*.gif)|*.bmp;*.jpg;*.gif";
-            //openFileDialog1.Title = "Open Image";
-            //if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            //{
-            //    string fileName = openFileDialog1.FileName;
-            //    if (fileName.Length != 0)
-            //    {
-            //        Bitmap img = new Bitmap(fileName);
-            //        //Extract Fmd from bmp image saved
-            //        enrolledFmdList.Clear();
-            //        DataResult<Fmd> fmdfromBMP = ExtractFmdfromBmp(img);
-            //        enrolledFmdList.Add(fmdfromBMP.Data);
-
-            //        reader.On_Captured += new Reader.CaptureCallback(reader_On_Captured);
-            //        VerificationCapture();
-            //    }
-            //}
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
-        {
-
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al deserializar XML: " + ex.Message);
+                return null;
+            }
         }
 
         private void SaveBtn_Click(object sender, EventArgs e)
@@ -469,7 +449,6 @@ namespace UareUWindowsMSSQLCSharp
                     verifyPicBox.Image.Save(filename, ImageFormat.Bmp);
             }
         }
-
 
     }
 }

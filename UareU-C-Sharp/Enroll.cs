@@ -98,7 +98,7 @@ namespace UareUWindowsMSSQLCSharp
         {
             this.EnrollmentFmdResult = fmd; // Guardamos el resultado
             this.DialogResult = DialogResult.OK; // Cerramos con éxito
-            this.Close();
+            //this.Close();
         }
 
         void reader_On_Captured(CaptureResult capResult)
@@ -117,34 +117,63 @@ namespace UareUWindowsMSSQLCSharp
                     {
                         // ¡ÉXITO! Ya se completaron las capturas necesarias y se creó la plantilla
                         this.EnrollmentFmdResult = enrollmentFmd.Data;
-                        MostrarImagenHuella(capResult);
-                        UpdateEnrollMessage("Capturas completadas. Haga clic en Guardar.", null);
+                        MostrarImagenHuella(capResult, preEnrollmentFmd.Count);
+                        UpdateEnrollMessage("CAPTURAS COMPLETADAS.", null,0);
                         OnEnrollmentSuccess(enrollmentFmd.Data);
                     }
-                    else if (enrollmentFmd.ResultCode == Constants.ResultCode.DP_ENROLLMENT_IN_PROGRESS)
+                    else if (enrollmentFmd.ResultCode == Constants.ResultCode.DP_ENROLLMENT_NOT_READY)
                     {
-                        // Aún faltan más capturas (normalmente faltan 3, 2 o 1)
                         int faltantes = 4 - preEnrollmentFmd.Count;
-                        MostrarImagenHuella(capResult);
-                        UpdateEnrollMessage($"Muestra capturada. Favor de poner el dedo {faltantes} vez/veces más.", null);
+                        MostrarImagenHuella(capResult, preEnrollmentFmd.Count);
+                        UpdateEnrollMessage($"MUESTRA CAPTURADA. \nFAVOR DE PONER EL DEDO {faltantes} VEZ/VECES MÁS.", null, 0);
+
+                        switch (preEnrollmentFmd.Count)
+                        {
+                            case 1:
+                                this.Invoke(new Action(() => {
+                                    pictureBox1.BorderStyle = BorderStyle.FixedSingle;
+                                    pictureBox1.Refresh();
+                                }));
+                                break;
+                            case 2:
+                                this.Invoke(new Action(() => {
+                                    pictureBox2.BorderStyle = BorderStyle.FixedSingle;
+                                    pictureBox2.Refresh();
+                                }));
+                                break;
+                            case 3:
+                                this.Invoke(new Action(() => {
+                                    pictureBox3.BorderStyle = BorderStyle.FixedSingle;
+                                    pictureBox3.Refresh();
+                                }));
+                                break;
+                            case 4:
+                                this.Invoke(new Action(() =>
+                                {
+                                    MessageBox.Show("ERROR! DEBE CAPTURAR EL MISMO DEDO.");
+                                    this.DialogResult = DialogResult.Cancel;
+                                }));
+                                return;
+                        }
+                        
                     }
                 }
                 else
                 {
-                    UpdateEnrollMessage("Error al extraer características de la huella.", null);
+                    UpdateEnrollMessage("Error al extraer características de la huella.", null,0);
                 }
             }
             else
             {
-                UpdateEnrollMessage("Mala calidad de captura. Intente de nuevo.", null);
+                UpdateEnrollMessage("Mala calidad de captura. Intente de nuevo.", null,0);
             }
         }
 
-        private void MostrarImagenHuella(CaptureResult capResult)
+        private void MostrarImagenHuella(CaptureResult capResult, int nroHuella)
         {
             foreach (Fid.Fiv fiv in capResult.Data.Views)
             {
-                UpdateEnrollMessage(null, HelperFunctions.CreateBitmap(fiv.RawImage, fiv.Width, fiv.Height));
+                UpdateEnrollMessage(null, HelperFunctions.CreateBitmap(fiv.RawImage, fiv.Width, fiv.Height),nroHuella);
                 break;
             }
         }
@@ -157,22 +186,40 @@ namespace UareUWindowsMSSQLCSharp
         }
 
 
-        delegate void UpdateEnrollMessageCallback(string text1, Bitmap image);
-        private void UpdateEnrollMessage(string text, Bitmap image)
+        delegate void UpdateEnrollMessageCallback(string text1, Bitmap image, int nrohuella);
+        private void UpdateEnrollMessage(string text, Bitmap image, int nrohuella)
         {
             //Aqui tambien 2
             if (this.messagelbl.InvokeRequired)
             {
                 UpdateEnrollMessageCallback callBack = new UpdateEnrollMessageCallback(UpdateEnrollMessage);
-                this.Invoke(callBack, new object[] { text, image });
+                this.Invoke(callBack, new object[] { text, image, nrohuella });
             }
             else
             {
                 messagelbl.Text = text;
                 if (image != null)
                 {
-                    enrollPicBox.Image = image;
-                    enrollPicBox.Refresh();
+                    switch (nrohuella)
+                    {
+                        case 1:
+                            enrollPicBox.Image = image;
+                            enrollPicBox.Refresh();
+                            break;
+                        case 2:
+                            pictureBox1.Image = image;
+                            pictureBox1.Refresh();
+                            break;
+                        case 3:
+                            pictureBox2.Image = image;
+                            pictureBox2.Refresh();
+                            break;
+                        case 4:
+                            pictureBox3.Image = image;
+                            pictureBox3.Refresh();
+                            break;
+                    }
+                    
                 }
             }
 
