@@ -5,7 +5,7 @@ BEGIN
 SELECT      
     HuellaXml,
     Nombre,
-    Fecha_vencimiento
+    Vigencia
 FROM      
 (      
  SELECT        
@@ -19,9 +19,10 @@ FROM
 	 WHEN C.Frecuencia = 'SEMANAL' THEN DATEADD(day, -1, DATEADD(week, 1, CAST(B.Fecha_Pago AS DATE)))
 	 WHEN C.Frecuencia = 'MENSUAL' THEN DATEADD(day, -1, DATEADD(month, 1, CAST(B.Fecha_Pago AS DATE)))      
      WHEN C.Frecuencia = 'SEMESTRAL' THEN DATEADD(day, -1, DATEADD(month, 6, CAST(B.Fecha_Pago AS DATE)))
-  END AS Fecha_vencimiento,      
+  END AS Vigencia,      
   B.idPaquete,      
-  C.Frecuencia      
+  C.Frecuencia,
+  A.Activo
  FROM        
   Clientes AS A      
  INNER JOIN        
@@ -39,6 +40,6 @@ FROM
  INNER JOIN Paquetes AS C ON B.idPaquete = C.idPaquete      
 ) AS T      
 -- Comparamos contra el inicio del día de hoy
-WHERE Fecha_vencimiento >= CAST(GETDATE() AS DATE);      
-      
+WHERE Vigencia >= CAST(GETDATE() AS DATE)     
+AND Activo = 1;
 END
