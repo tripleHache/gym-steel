@@ -46,14 +46,15 @@
             this.huella = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbSexo = new System.Windows.Forms.ComboBox();
             this.tbidCliente = new System.Windows.Forms.TextBox();
+            this.btnEliminar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
             // enrollbtn
             // 
-            this.enrollbtn.Location = new System.Drawing.Point(557, 127);
+            this.enrollbtn.Location = new System.Drawing.Point(701, 139);
             this.enrollbtn.Name = "enrollbtn";
-            this.enrollbtn.Size = new System.Drawing.Size(124, 23);
+            this.enrollbtn.Size = new System.Drawing.Size(233, 23);
             this.enrollbtn.TabIndex = 4;
             this.enrollbtn.Text = "CAPTURAR HUELLA";
             this.enrollbtn.UseVisualStyleBackColor = true;
@@ -68,7 +69,6 @@
             this.verifybtn.Text = "Verify";
             this.verifybtn.UseVisualStyleBackColor = true;
             this.verifybtn.Visible = false;
-            this.verifybtn.Click += new System.EventHandler(this.verifybtn_Click);
             // 
             // readerNotFoundlbl
             // 
@@ -115,11 +115,12 @@
             // 
             // tbHuella
             // 
-            this.tbHuella.Location = new System.Drawing.Point(687, 130);
+            this.tbHuella.Location = new System.Drawing.Point(629, 120);
             this.tbHuella.Name = "tbHuella";
             this.tbHuella.ReadOnly = true;
             this.tbHuella.Size = new System.Drawing.Size(373, 20);
             this.tbHuella.TabIndex = 9;
+            this.tbHuella.Visible = false;
             // 
             // label3
             // 
@@ -132,7 +133,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(732, 205);
+            this.button1.Enabled = false;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(606, 205);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(188, 51);
             this.button1.TabIndex = 5;
@@ -207,11 +210,25 @@
             this.tbidCliente.TabIndex = 101;
             this.tbidCliente.Visible = false;
             // 
+            // btnEliminar
+            // 
+            this.btnEliminar.Enabled = false;
+            this.btnEliminar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEliminar.ForeColor = System.Drawing.Color.Red;
+            this.btnEliminar.Location = new System.Drawing.Point(847, 205);
+            this.btnEliminar.Name = "btnEliminar";
+            this.btnEliminar.Size = new System.Drawing.Size(188, 51);
+            this.btnEliminar.TabIndex = 102;
+            this.btnEliminar.Text = "ELIMINAR CLIENTE";
+            this.btnEliminar.UseVisualStyleBackColor = true;
+            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 362);
+            this.Controls.Add(this.btnEliminar);
             this.Controls.Add(this.tbidCliente);
             this.Controls.Add(this.cbSexo);
             this.Controls.Add(this.dgvClientes);
@@ -253,6 +270,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn edad;
         private System.Windows.Forms.DataGridViewTextBoxColumn huella;
         private System.Windows.Forms.TextBox tbidCliente;
+        private System.Windows.Forms.Button btnEliminar;
     }
 }
 

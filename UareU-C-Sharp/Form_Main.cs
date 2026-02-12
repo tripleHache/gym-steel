@@ -4,9 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
 using DPUruNet;
 using System.Data.SqlClient;
 using System.IO;
@@ -17,7 +15,6 @@ namespace UareUWindowsMSSQLCSharp
     {
         private Reader reader;
         private string xmlHuellaFinal = string.Empty;
-        //private string cadenaConexion = @"Data Source=DESKTOP-KUBF2IC\SQLEXPRESS;Initial Catalog=Gimnasio;Integrated Security=True";
         private string cadenaConexion;
         public Reader GetReader
         {
@@ -36,10 +33,6 @@ namespace UareUWindowsMSSQLCSharp
             load_dgvClientes();
             cbSexo.SelectedIndex = 0;
             cbSexo.DropDownStyle = ComboBoxStyle.DropDownList;
-            //Load all users from database to use in identify function. This data being
-            //considerably large we would want to load this once at the statrtup of 
-            //application
-            // HelperFunctions.LoadAllUsers();
         }
 
         private void CheckReaderPluggedin()
@@ -50,35 +43,6 @@ namespace UareUWindowsMSSQLCSharp
             {
                 readerNotFoundlbl.Visible = true;
             }
-        }
-
-        private void enrollbtn_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(tbNombre.Text) && !string.IsNullOrEmpty(tbEdad.Text))
-            {
-                // Launch EnrollForm
-                string nombre_archivo_huella = tbNombre.Text.Replace(" ", "") + "_" + tbEdad.Text.Replace(" ", "") + "_" + cbSexo.SelectedValue;
-                Enroll enrollForm = new Enroll(nombre_archivo_huella);
-                enrollForm._sender = this;
-                //enrollForm.ShowDialog();
-                if (enrollForm.ShowDialog() == DialogResult.OK)
-                {
-                    xmlHuellaFinal = Fmd.SerializeXml(enrollForm.EnrollmentFmdResult);
-                }
-                tbHuella.Text = @"C:\conf_gympack\huella\" + nombre_archivo_huella + ".bmp";
-            }
-            else
-            {
-                MessageBox.Show("Es necesario que capture todos los datos del usuario");
-            }
-        }
-
-        private void verifybtn_Click(object sender, EventArgs e)
-        {
-            //Launch VerifyForm
-            //Verify verify = new Verify();
-            //verify._sender = this;
-            //verify.ShowDialog();
         }
 
         public void load_dgvClientes()
@@ -93,7 +57,7 @@ namespace UareUWindowsMSSQLCSharp
                     conexion.Open();
 
                     // Crear el comando SQL
-                    string consulta = "select * from Clientes;";
+                    string consulta = "select * from Clientes where Activo = 1;";
                     using (SqlCommand comando = new SqlCommand(consulta, conexion))
                     {
                         // Ejecutar la consulta y obtener el lector de datos
@@ -210,11 +174,7 @@ namespace UareUWindowsMSSQLCSharp
                     if (filasAfectadas > 0)
                     {
                         MessageBox.Show("CLIENTE MODIFICADO CORRECTAMENTE.");
-                        tbNombre.Text = "";
-                        tbHuella.Text = "";
-                        tbEdad.Text = "";
-                        cbSexo.SelectedIndex = 0;
-                        xmlHuellaFinal = string.Empty;
+                        LimpiarCampos();
                         load_dgvClientes();
                     }
                     else
@@ -235,6 +195,10 @@ namespace UareUWindowsMSSQLCSharp
             // Verificamos que el clic sea en una fila y no en el encabezado (índice -1)
             if (e.RowIndex >= 0)
             {
+                foreach (DataGridViewRow r in dgvClientes.Rows)
+                {
+                    r.DefaultCellStyle.BackColor = Color.White; // O Color.Empty para usar el default
+                }
                 // Obtener la fila completa
                 DataGridViewRow row = dgvClientes.Rows[e.RowIndex];
                 // Pintar de amarillo
@@ -259,7 +223,97 @@ namespace UareUWindowsMSSQLCSharp
                 }
                 tbEdad.Text = edad;
                 button1.Text = "MODIFICAR CLIENTE";
+                button1.Enabled = true;
+                btnEliminar.Enabled = true;
                 tbHuella.Text = huella;
+            }
+        }
+        private void eliminarCliente(int idCliente)
+        {
+            DialogResult result = MessageBox.Show("¿Desea dar de baja a este cliente? Se mantendrá en el historial pero no podrá ingresar.",
+                "Confirmar Baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection conexion = new SqlConnection(cadenaConexion))
+                    {
+                        conexion.Open();
+                        // Cambiamos el DELETE por un UPDATE de la columna Activo
+                        string sql = "UPDATE Clientes SET Activo = 0 WHERE idCliente = @idcliente;";
+
+                        using (SqlCommand cmd = new SqlCommand(sql, conexion))
+                        {
+                            cmd.Parameters.AddWithValue("@idcliente", idCliente);
+
+                            if (cmd.ExecuteNonQuery() > 0)
+                            {
+                                MessageBox.Show("CLIENTE DADO DE BAJA EXITOSAMENTE.");
+                                LimpiarCampos();
+                                load_dgvClientes(); // Refresca la lista
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al procesar la baja: " + ex.Message);
+                }
+            }
+        }
+        private void LimpiarCampos()
+        {
+            // Vacía los cuadros de texto
+            tbidCliente.Clear();
+            tbNombre.Clear();
+            tbEdad.Clear();
+            tbHuella.Clear();
+
+            // Regresa el combo de sexo a la primera opción (por defecto "M")
+            cbSexo.SelectedIndex = 0;
+
+            // Resetea la variable donde se guarda la huella capturada
+            xmlHuellaFinal = string.Empty;
+
+            // Muy importante: Regresa el texto del botón a su estado original
+            button1.Text = "GUARDAR CLIENTE";
+            button1.Enabled = false;
+
+            // Opcional: Quitar colores de selección en el DataGridView
+            dgvClientes.ClearSelection();
+        }
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbidCliente.Text))
+            {
+                eliminarCliente(Convert.ToInt32(tbidCliente.Text));
+            }
+            else
+            {
+                MessageBox.Show("Seleccione un cliente de la lista primero.");
+            }
+        }
+
+        private void enrollbtn_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbNombre.Text) && !string.IsNullOrEmpty(tbEdad.Text))
+            {
+                // Launch EnrollForm
+                string nombre_archivo_huella = tbNombre.Text.Replace(" ", "") + "_" + tbEdad.Text.Replace(" ", "") + "_" + cbSexo.SelectedValue;
+                Enroll enrollForm = new Enroll(nombre_archivo_huella);
+                enrollForm._sender = this;
+                //enrollForm.ShowDialog();
+                if (enrollForm.ShowDialog() == DialogResult.OK)
+                {
+                    xmlHuellaFinal = Fmd.SerializeXml(enrollForm.EnrollmentFmdResult);
+                }
+                tbHuella.Text = @"C:\conf_gympack\huella\" + nombre_archivo_huella + ".bmp";
+                button1.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Es necesario que capture todos los datos del usuario");
             }
         }
     }
