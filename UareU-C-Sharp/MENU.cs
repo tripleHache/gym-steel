@@ -96,8 +96,8 @@ namespace UareUWindowsMSSQLCSharp
 
         private void pAQUETESToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PAQUETES objPaquetes = new PAQUETES();
-            objPaquetes.ShowDialog();
+            MEMBRESIAS objMembresias = new MEMBRESIAS();
+            objMembresias.ShowDialog();
         }
     }
 }

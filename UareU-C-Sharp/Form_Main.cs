@@ -234,6 +234,7 @@ namespace UareUWindowsMSSQLCSharp
                 button1.Text = "MODIFICAR CLIENTE";
                 button1.Enabled = true;
                 btnEliminar.Enabled = true;
+                btnValidarStatus.Enabled = true;
                 tbHuella.Text = huella;
             }
         }
@@ -289,7 +290,7 @@ namespace UareUWindowsMSSQLCSharp
             button1.Text = "GUARDAR CLIENTE";
             button1.Enabled = false;
             btnEliminar.Enabled = false;
-
+            btnValidarStatus.Enabled = false;
             // Opcional: Quitar colores de selección en el DataGridView
             dgvClientes.ClearSelection();
             load_dgvClientes();
@@ -331,6 +332,13 @@ namespace UareUWindowsMSSQLCSharp
         private void tbBuscar_TextChanged(object sender, EventArgs e)
         {
             load_dgvClientes(tbBuscar.Text);
+        }
+
+        private void btnValidarStatus_Click(object sender, EventArgs e)
+        {
+            int idcliente = Convert.ToInt32(tbidCliente.Text);
+            STATUS objStatus = new STATUS(idcliente);
+            objStatus.ShowDialog();
         }
     }
 }

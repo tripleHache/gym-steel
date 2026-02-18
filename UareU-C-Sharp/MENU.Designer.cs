@@ -31,6 +31,8 @@ namespace UareUWindowsMSSQLCSharp
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.cLIENTESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cLIENTESToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pAQUETESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hUELLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pAGOSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cAPTURARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,8 +41,6 @@ namespace UareUWindowsMSSQLCSharp
             this.sALIRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblUsuarioInfo = new System.Windows.Forms.ToolStripStatusLabel();
-            this.cLIENTESToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.pAQUETESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -69,6 +69,20 @@ namespace UareUWindowsMSSQLCSharp
             this.cLIENTESToolStripMenuItem.Text = "CATALOGOS";
             this.cLIENTESToolStripMenuItem.Click += new System.EventHandler(this.cLIENTESToolStripMenuItem_Click);
             // 
+            // cLIENTESToolStripMenuItem1
+            // 
+            this.cLIENTESToolStripMenuItem1.Name = "cLIENTESToolStripMenuItem1";
+            this.cLIENTESToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.cLIENTESToolStripMenuItem1.Text = "CLIENTES";
+            this.cLIENTESToolStripMenuItem1.Click += new System.EventHandler(this.cLIENTESToolStripMenuItem1_Click);
+            // 
+            // pAQUETESToolStripMenuItem
+            // 
+            this.pAQUETESToolStripMenuItem.Name = "pAQUETESToolStripMenuItem";
+            this.pAQUETESToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pAQUETESToolStripMenuItem.Text = "MEMBRESIAS";
+            this.pAQUETESToolStripMenuItem.Click += new System.EventHandler(this.pAQUETESToolStripMenuItem_Click);
+            // 
             // hUELLAToolStripMenuItem
             // 
             this.hUELLAToolStripMenuItem.Name = "hUELLAToolStripMenuItem";
@@ -89,14 +103,14 @@ namespace UareUWindowsMSSQLCSharp
             // cAPTURARToolStripMenuItem
             // 
             this.cAPTURARToolStripMenuItem.Name = "cAPTURARToolStripMenuItem";
-            this.cAPTURARToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cAPTURARToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.cAPTURARToolStripMenuItem.Text = "CAPTURA";
             this.cAPTURARToolStripMenuItem.Click += new System.EventHandler(this.cAPTURARToolStripMenuItem_Click);
             // 
             // cORTEToolStripMenuItem
             // 
             this.cORTEToolStripMenuItem.Name = "cORTEToolStripMenuItem";
-            this.cORTEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cORTEToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.cORTEToolStripMenuItem.Text = "CORTE";
             this.cORTEToolStripMenuItem.Click += new System.EventHandler(this.cORTEToolStripMenuItem_Click);
             // 
@@ -129,20 +143,6 @@ namespace UareUWindowsMSSQLCSharp
             this.lblUsuarioInfo.Name = "lblUsuarioInfo";
             this.lblUsuarioInfo.Size = new System.Drawing.Size(118, 17);
             this.lblUsuarioInfo.Text = "toolStripStatusLabel1";
-            // 
-            // cLIENTESToolStripMenuItem1
-            // 
-            this.cLIENTESToolStripMenuItem1.Name = "cLIENTESToolStripMenuItem1";
-            this.cLIENTESToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.cLIENTESToolStripMenuItem1.Text = "CLIENTES";
-            this.cLIENTESToolStripMenuItem1.Click += new System.EventHandler(this.cLIENTESToolStripMenuItem1_Click);
-            // 
-            // pAQUETESToolStripMenuItem
-            // 
-            this.pAQUETESToolStripMenuItem.Name = "pAQUETESToolStripMenuItem";
-            this.pAQUETESToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.pAQUETESToolStripMenuItem.Text = "PAQUETES";
-            this.pAQUETESToolStripMenuItem.Click += new System.EventHandler(this.pAQUETESToolStripMenuItem_Click);
             // 
             // MENU
             // 

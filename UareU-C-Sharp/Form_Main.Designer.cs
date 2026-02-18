@@ -49,6 +49,7 @@
             this.btnEliminar = new System.Windows.Forms.Button();
             this.lblBuscarPorNombre = new System.Windows.Forms.Label();
             this.tbBuscar = new System.Windows.Forms.TextBox();
+            this.btnValidarStatus = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -242,11 +243,24 @@
             this.tbBuscar.TabIndex = 104;
             this.tbBuscar.TextChanged += new System.EventHandler(this.tbBuscar_TextChanged);
             // 
+            // btnValidarStatus
+            // 
+            this.btnValidarStatus.Enabled = false;
+            this.btnValidarStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnValidarStatus.Location = new System.Drawing.Point(731, 277);
+            this.btnValidarStatus.Name = "btnValidarStatus";
+            this.btnValidarStatus.Size = new System.Drawing.Size(188, 51);
+            this.btnValidarStatus.TabIndex = 105;
+            this.btnValidarStatus.Text = "VALIDAR STATUS";
+            this.btnValidarStatus.UseVisualStyleBackColor = true;
+            this.btnValidarStatus.Click += new System.EventHandler(this.btnValidarStatus_Click);
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 362);
+            this.Controls.Add(this.btnValidarStatus);
             this.Controls.Add(this.tbBuscar);
             this.Controls.Add(this.lblBuscarPorNombre);
             this.Controls.Add(this.btnEliminar);
@@ -294,6 +308,7 @@
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.Label lblBuscarPorNombre;
         private System.Windows.Forms.TextBox tbBuscar;
+        private System.Windows.Forms.Button btnValidarStatus;
     }
 }
 

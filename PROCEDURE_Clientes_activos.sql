@@ -15,10 +15,13 @@ FROM
   A.HuellaXml,
   B.Fecha_Pago,      
   CASE        
-     WHEN C.Frecuencia = 'DIARIO' THEN CAST(B.Fecha_Pago AS DATE)      
-	 WHEN C.Frecuencia = 'SEMANAL' THEN DATEADD(day, -1, DATEADD(week, 1, CAST(B.Fecha_Pago AS DATE)))
-	 WHEN C.Frecuencia = 'MENSUAL' THEN DATEADD(day, -1, DATEADD(month, 1, CAST(B.Fecha_Pago AS DATE)))      
-     WHEN C.Frecuencia = 'SEMESTRAL' THEN DATEADD(day, -1, DATEADD(month, 6, CAST(B.Fecha_Pago AS DATE)))
+    WHEN C.Frecuencia = 'DIARIO' THEN CAST(B.Fecha_Pago AS DATE)        
+    WHEN C.Frecuencia = 'SEMANAL' THEN DATEADD(day, -1, DATEADD(week, 1, CAST(B.Fecha_Pago AS DATE)))  
+    WHEN C.Frecuencia = 'MENSUAL' THEN DATEADD(day, -1, DATEADD(month, 1, CAST(B.Fecha_Pago AS DATE)))            
+	WHEN C.Frecuencia = 'BIMESTRAL' THEN DATEADD(day, -1, DATEADD(month, 2, CAST(B.Fecha_Pago AS DATE)))  
+	WHEN C.Frecuencia = 'TRIMESTRAL' THEN DATEADD(day, -1, DATEADD(month, 3, CAST(B.Fecha_Pago AS DATE)))  
+    WHEN C.Frecuencia = 'SEMESTRAL' THEN DATEADD(day, -1, DATEADD(month, 6, CAST(B.Fecha_Pago AS DATE)))  
+	WHEN C.Frecuencia = 'ANUAL' THEN DATEADD(day, -1, DATEADD(year, 1, CAST(B.Fecha_Pago AS DATE)))  
   END AS Vigencia,      
   B.idPaquete,      
   C.Frecuencia,

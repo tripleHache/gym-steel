@@ -180,6 +180,7 @@
             this.Name = "Verify";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CHECADOR";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Verify_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Verify_FormClosed);
             this.Load += new System.EventHandler(this.Verify_Load);
             ((System.ComponentModel.ISupportInitialize)(this.verifyPicBox)).EndInit();

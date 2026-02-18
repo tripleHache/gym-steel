@@ -85,6 +85,12 @@
     <Compile Include="LOGIN.Designer.cs">
       <DependentUpon>LOGIN.cs</DependentUpon>
     </Compile>
+    <Compile Include="MEMBRESIAS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MEMBRESIAS.Designer.cs">
+      <DependentUpon>MEMBRESIAS.cs</DependentUpon>
+    </Compile>
     <Compile Include="MENU.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +117,12 @@
     <Compile Include="REPORTEADOR.Designer.cs">
       <DependentUpon>REPORTEADOR.cs</DependentUpon>
     </Compile>
+    <Compile Include="STATUS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="STATUS.Designer.cs">
+      <DependentUpon>STATUS.cs</DependentUpon>
+    </Compile>
     <Compile Include="UsuarioSesion.cs" />
     <Compile Include="Verify.cs">
       <SubType>Form</SubType>
@@ -130,6 +142,9 @@
     <EmbeddedResource Include="LOGIN.resx">
       <DependentUpon>LOGIN.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MEMBRESIAS.resx">
+      <DependentUpon>MEMBRESIAS.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MENU.resx">
       <DependentUpon>MENU.cs</DependentUpon>
     </EmbeddedResource>
@@ -148,6 +163,9 @@
     </Compile>
     <EmbeddedResource Include="REPORTEADOR.resx">
       <DependentUpon>REPORTEADOR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="STATUS.resx">
+      <DependentUpon>STATUS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Verify.resx">
       <DependentUpon>Verify.cs</DependentUpon>

@@ -46,7 +46,7 @@ namespace UareUWindowsMSSQLCSharp
                 {
                     if (reader.Status.Status == Constants.ReaderStatuses.DP_STATUS_READY)
                     {
-                        reader.On_Captured += new Reader.CaptureCallback(reader_On_Captured);
+                        reader.On_Captured += new Reader.CaptureCallback(reader_On_CapturedAsync);
                         VerificationCapture();
                         //VerifyMessageLbl.Text = "Fingerprint Reader found and status is ready";
                         VerifyMessageLbl.Text = "Lector listo. Procesando datos...";
@@ -151,10 +151,10 @@ namespace UareUWindowsMSSQLCSharp
             }
         }
 
-        void reader_On_Captured(CaptureResult capResult)
+        private async void reader_On_CapturedAsync(CaptureResult capResult)
         {
 
-
+            if (this.IsDisposed || this.Disposing) return;
             if (capResult.Quality == Constants.CaptureQuality.DP_QUALITY_GOOD)
             {
                 DataResult<Fmd> fmdResult = FeatureExtraction.CreateFmdFromFid(capResult.Data, Constants.Formats.Fmd.DP_VERIFICATION);
@@ -190,11 +190,16 @@ namespace UareUWindowsMSSQLCSharp
 
                             string nombreEncontrado = cliente.Nombre;
                             DateTime vencimiento = cliente.FechaVencimiento;
-                            this.Invoke(new Action(() => {
-                                lblCliente.Text = "Cliente: " + nombreEncontrado;
-                                lblVencimiento.Text = "Vigente hasta el: " + vencimiento.ToString("dd/MM/yyyy");
-                                VerifyMessageLbl.Text = "¡Acceso Autorizado!";
-                            }));
+                            if (!this.IsDisposed)
+                            {
+                                this.Invoke(new Action(() =>
+                                {
+                                    lblCliente.Text = "Cliente: " + nombreEncontrado;
+                                    lblVencimiento.Text = "Vigente hasta el: " + vencimiento.ToString("dd/MM/yyyy");
+                                    VerifyMessageLbl.Text = "¡Acceso Autorizado!";
+                                }));
+                            }
+                            //if (!this.IsDisposed) VerificationCapture();
                         }
                         else
                         {
@@ -213,7 +218,8 @@ namespace UareUWindowsMSSQLCSharp
                             string rutaImagen = @"C:\conf_gympack\check2.jpeg";
                             Image img2 = Image.FromFile(rutaImagen);
                             pictureBox1.Image = img2;
-                            Thread.Sleep(2000);
+                            //Thread.Sleep(2000);
+                            await Task.Delay(2000);
                             pictureBox1.Image = null;
                             UpdateVerifyMessage("", null, "");
                         }
@@ -234,7 +240,8 @@ namespace UareUWindowsMSSQLCSharp
                             string rutaImagen = @"C:\conf_gympack\fail2.jpeg";
                             Image img2 = Image.FromFile(rutaImagen);
                             pictureBox1.Image = img2;
-                            Thread.Sleep(2000);
+                            //Thread.Sleep(2000);
+                            await Task.Delay(2000);
                             pictureBox1.Image = null;
                             UpdateVerifyMessage("", null, "");
                         }
@@ -307,12 +314,13 @@ namespace UareUWindowsMSSQLCSharp
             return bmp;
         }
 
-        private void CheckReaderStatus()
+        private async Task CheckReaderStatusAsync()
         {
             //If reader is busy, sleep
             if (reader.Status.Status == Constants.ReaderStatuses.DP_STATUS_BUSY)
             {
-                Thread.Sleep(50);
+                //Thread.Sleep(50);
+                await Task.Delay(50);
             }
             else if ((reader.Status.Status == Constants.ReaderStatuses.DP_STATUS_NEED_CALIBRATION))
             {
@@ -329,10 +337,15 @@ namespace UareUWindowsMSSQLCSharp
         delegate void UpdateVerifyMessageCallback(string text1, Bitmap image, string text2);
         private void UpdateVerifyMessage(string text, Bitmap image, string text2)
         {
+            if (this.IsDisposed || this.Disposing) return;
             if (this.VerifyMessageLbl.InvokeRequired)
             {
-                UpdateVerifyMessageCallback callBack = new UpdateVerifyMessageCallback(UpdateVerifyMessage);
-                this.Invoke(callBack, new object[] { text, image, text2 });
+                try
+                {
+                    UpdateVerifyMessageCallback callBack = new UpdateVerifyMessageCallback(UpdateVerifyMessage);
+                    this.Invoke(callBack, new object[] { text, image, text2 });
+                }
+                catch (ObjectDisposedException) { /* Ignorar si ocurrió justo al cerrar */ }
             }
             else
             {
@@ -374,6 +387,22 @@ namespace UareUWindowsMSSQLCSharp
             {
                 Console.WriteLine("Error al deserializar XML: " + ex.Message);
                 return null;
+            }
+        }
+
+        private void Verify_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (reader != null)
+            {
+                // 1. Des-suscribirse del evento primero
+                reader.On_Captured -= reader_On_CapturedAsync;
+
+                // 2. Cancelar cualquier captura pendiente
+                reader.CancelCapture();
+
+                // 3. Cerrar la conexión con el lector
+                reader.Dispose();
+                reader = null;
             }
         }
     }
