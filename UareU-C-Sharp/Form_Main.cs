@@ -33,6 +33,11 @@ namespace UareUWindowsMSSQLCSharp
             load_dgvClientes();
             cbSexo.SelectedIndex = 0;
             cbSexo.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            if (UsuarioSesion.Rol == 2)
+            {
+                btnEliminar.Visible = false;
+            }
         }
 
         private void CheckReaderPluggedin()
@@ -45,7 +50,7 @@ namespace UareUWindowsMSSQLCSharp
             }
         }
 
-        public void load_dgvClientes()
+        public void load_dgvClientes(string filtro = "")
         {
             dgvClientes.Rows.Clear();
             try
@@ -57,9 +62,17 @@ namespace UareUWindowsMSSQLCSharp
                     conexion.Open();
 
                     // Crear el comando SQL
-                    string consulta = "select * from Clientes where Activo = 1;";
+                    string consulta = "select * from Clientes where Activo = 1";
+                    if (!string.IsNullOrEmpty(filtro))
+                    {
+                        consulta += " AND Nombre LIKE @filtro";
+                    }
                     using (SqlCommand comando = new SqlCommand(consulta, conexion))
                     {
+                        if (!string.IsNullOrEmpty(filtro))
+                        {
+                            comando.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+                        }
                         // Ejecutar la consulta y obtener el lector de datos
                         using (SqlDataReader lector = comando.ExecuteReader())
                         {
@@ -126,12 +139,8 @@ namespace UareUWindowsMSSQLCSharp
                     if (filasAfectadas > 0)
                     {
                         MessageBox.Show("CLIENTE GUARDADO CORRECTAMENTE.");
-                        tbNombre.Text = "";
-                        tbHuella.Text = "";
-                        tbEdad.Text = "";
-                        cbSexo.SelectedIndex = 0;
-                        xmlHuellaFinal = string.Empty;
-                        load_dgvClientes();
+                        LimpiarCampos();
+                        //load_dgvClientes();
                     }
                     else
                     {
@@ -175,7 +184,7 @@ namespace UareUWindowsMSSQLCSharp
                     {
                         MessageBox.Show("CLIENTE MODIFICADO CORRECTAMENTE.");
                         LimpiarCampos();
-                        load_dgvClientes();
+                        //load_dgvClientes();
                     }
                     else
                     {
@@ -251,7 +260,7 @@ namespace UareUWindowsMSSQLCSharp
                             {
                                 MessageBox.Show("CLIENTE DADO DE BAJA EXITOSAMENTE.");
                                 LimpiarCampos();
-                                load_dgvClientes(); // Refresca la lista
+                                //load_dgvClientes(); // Refresca la lista
                             }
                         }
                     }
@@ -269,7 +278,7 @@ namespace UareUWindowsMSSQLCSharp
             tbNombre.Clear();
             tbEdad.Clear();
             tbHuella.Clear();
-
+            tbBuscar.Clear();
             // Regresa el combo de sexo a la primera opción (por defecto "M")
             cbSexo.SelectedIndex = 0;
 
@@ -279,9 +288,11 @@ namespace UareUWindowsMSSQLCSharp
             // Muy importante: Regresa el texto del botón a su estado original
             button1.Text = "GUARDAR CLIENTE";
             button1.Enabled = false;
+            btnEliminar.Enabled = false;
 
             // Opcional: Quitar colores de selección en el DataGridView
             dgvClientes.ClearSelection();
+            load_dgvClientes();
         }
         private void btnEliminar_Click(object sender, EventArgs e)
         {
@@ -315,6 +326,11 @@ namespace UareUWindowsMSSQLCSharp
             {
                 MessageBox.Show("Es necesario que capture todos los datos del usuario");
             }
+        }
+
+        private void tbBuscar_TextChanged(object sender, EventArgs e)
+        {
+            load_dgvClientes(tbBuscar.Text);
         }
     }
 }

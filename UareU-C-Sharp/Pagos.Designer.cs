@@ -56,6 +56,8 @@ namespace UareUWindowsMSSQLCSharp
             this.label2 = new System.Windows.Forms.Label();
             this.cbMetodoPago = new System.Windows.Forms.ComboBox();
             this.tbDescripcion = new System.Windows.Forms.TextBox();
+            this.lblfiltropornombre = new System.Windows.Forms.Label();
+            this.tbBuscarCliente = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaquetes)).BeginInit();
             this.SuspendLayout();
@@ -91,10 +93,10 @@ namespace UareUWindowsMSSQLCSharp
             this.nombre,
             this.sexo,
             this.edad});
-            this.dgvClientes.Location = new System.Drawing.Point(7, 31);
+            this.dgvClientes.Location = new System.Drawing.Point(7, 65);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
-            this.dgvClientes.Size = new System.Drawing.Size(445, 407);
+            this.dgvClientes.Size = new System.Drawing.Size(445, 373);
             this.dgvClientes.TabIndex = 3;
             this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_CellDoubleClick);
             // 
@@ -295,11 +297,30 @@ namespace UareUWindowsMSSQLCSharp
             this.tbDescripcion.TabIndex = 19;
             this.tbDescripcion.Visible = false;
             // 
+            // lblfiltropornombre
+            // 
+            this.lblfiltropornombre.AutoSize = true;
+            this.lblfiltropornombre.Location = new System.Drawing.Point(12, 38);
+            this.lblfiltropornombre.Name = "lblfiltropornombre";
+            this.lblfiltropornombre.Size = new System.Drawing.Size(99, 13);
+            this.lblfiltropornombre.TabIndex = 20;
+            this.lblfiltropornombre.Text = "Buscar por nombre:";
+            // 
+            // tbBuscarCliente
+            // 
+            this.tbBuscarCliente.Location = new System.Drawing.Point(117, 36);
+            this.tbBuscarCliente.Name = "tbBuscarCliente";
+            this.tbBuscarCliente.Size = new System.Drawing.Size(335, 20);
+            this.tbBuscarCliente.TabIndex = 21;
+            this.tbBuscarCliente.TextChanged += new System.EventHandler(this.tbBuscarCliente_TextChanged);
+            // 
             // Pagos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 450);
+            this.Controls.Add(this.tbBuscarCliente);
+            this.Controls.Add(this.lblfiltropornombre);
             this.Controls.Add(this.tbDescripcion);
             this.Controls.Add(this.cbMetodoPago);
             this.Controls.Add(this.label2);
@@ -357,5 +378,7 @@ namespace UareUWindowsMSSQLCSharp
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbMetodoPago;
         private System.Windows.Forms.TextBox tbDescripcion;
+        private System.Windows.Forms.Label lblfiltropornombre;
+        private System.Windows.Forms.TextBox tbBuscarCliente;
     }
 }

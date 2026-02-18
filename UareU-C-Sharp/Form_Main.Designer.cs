@@ -47,6 +47,8 @@
             this.cbSexo = new System.Windows.Forms.ComboBox();
             this.tbidCliente = new System.Windows.Forms.TextBox();
             this.btnEliminar = new System.Windows.Forms.Button();
+            this.lblBuscarPorNombre = new System.Windows.Forms.Label();
+            this.tbBuscar = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -152,9 +154,9 @@
             this.sexo,
             this.edad,
             this.huella});
-            this.dgvClientes.Location = new System.Drawing.Point(4, 6);
+            this.dgvClientes.Location = new System.Drawing.Point(4, 45);
             this.dgvClientes.Name = "dgvClientes";
-            this.dgvClientes.Size = new System.Drawing.Size(547, 344);
+            this.dgvClientes.Size = new System.Drawing.Size(547, 305);
             this.dgvClientes.TabIndex = 100;
             this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_CellDoubleClick);
             // 
@@ -223,11 +225,30 @@
             this.btnEliminar.UseVisualStyleBackColor = true;
             this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
             // 
+            // lblBuscarPorNombre
+            // 
+            this.lblBuscarPorNombre.AutoSize = true;
+            this.lblBuscarPorNombre.Location = new System.Drawing.Point(12, 21);
+            this.lblBuscarPorNombre.Name = "lblBuscarPorNombre";
+            this.lblBuscarPorNombre.Size = new System.Drawing.Size(133, 13);
+            this.lblBuscarPorNombre.TabIndex = 103;
+            this.lblBuscarPorNombre.Text = "Buscar cliente por nombre:";
+            // 
+            // tbBuscar
+            // 
+            this.tbBuscar.Location = new System.Drawing.Point(151, 18);
+            this.tbBuscar.Name = "tbBuscar";
+            this.tbBuscar.Size = new System.Drawing.Size(400, 20);
+            this.tbBuscar.TabIndex = 104;
+            this.tbBuscar.TextChanged += new System.EventHandler(this.tbBuscar_TextChanged);
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 362);
+            this.Controls.Add(this.tbBuscar);
+            this.Controls.Add(this.lblBuscarPorNombre);
             this.Controls.Add(this.btnEliminar);
             this.Controls.Add(this.tbidCliente);
             this.Controls.Add(this.cbSexo);
@@ -271,6 +292,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn huella;
         private System.Windows.Forms.TextBox tbidCliente;
         private System.Windows.Forms.Button btnEliminar;
+        private System.Windows.Forms.Label lblBuscarPorNombre;
+        private System.Windows.Forms.TextBox tbBuscar;
     }
 }
 

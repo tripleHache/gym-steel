@@ -78,13 +78,14 @@ namespace UareUWindowsMSSQLCSharp
             tbDescripcion.Clear();
             tbGrupo.Clear();
             tbPrecio.Clear();
+            tbBuscarCliente.Clear();
             cbMetodoPago.SelectedIndex = 0;
             btnPago.Enabled = false;
             load_dgvClientes();
             load_dgvPaquetes();
         }
 
-        public void load_dgvClientes()
+        public void load_dgvClientes(string filtro = "")
         {
             dgvClientes.Rows.Clear();
             try
@@ -96,9 +97,19 @@ namespace UareUWindowsMSSQLCSharp
                     conexion.Open();
 
                     // Crear el comando SQL
-                    string consulta = "select idCliente,Nombre,Sexo,Edad from Clientes ORDER BY Nombre ASC;";
+                    string consulta = "select idCliente,Nombre,Sexo,Edad from Clientes where Activo = 1";
+                    if (!string.IsNullOrEmpty(filtro))
+                    {
+                        consulta += " AND Nombre LIKE @filtro ";
+                    }
+                    consulta += " ORDER BY Nombre ASC;";
                     using (SqlCommand comando = new SqlCommand(consulta, conexion))
                     {
+                        if (!string.IsNullOrEmpty(filtro))
+                        {
+                            // El % permite buscar cualquier coincidencia (al inicio, medio o fin)
+                            comando.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+                        }
                         // Ejecutar la consulta y obtener el lector de datos
                         using (SqlDataReader lector = comando.ExecuteReader())
                         {
@@ -237,6 +248,11 @@ namespace UareUWindowsMSSQLCSharp
 
             string ConceptoPago = "Cliente:" + tbCliente.Text + "|ID Paquete:" +tbIdPaquete.Text + "|FREC:"+tbFrecuencia.Text + "|Precio:"+tbPrecio.Text + "|Grupo:"+tbGrupo.Text+"|Descripcion Paquete:"+tbDescripcion.Text;
             InsertarPago(Convert.ToDecimal(tbPrecio.Text), i_metodoPago, ConceptoPago, Convert.ToInt32(tbIdPaquete.Text), Convert.ToInt32(tbIdCliente.Text));
+        }
+
+        private void tbBuscarCliente_TextChanged(object sender, EventArgs e)
+        {
+            load_dgvClientes(tbBuscarCliente.Text);
         }
     }
 }

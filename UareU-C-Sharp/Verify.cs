@@ -9,6 +9,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace UareUWindowsMSSQLCSharp
 {
@@ -30,24 +31,52 @@ namespace UareUWindowsMSSQLCSharp
             cadenaConexion = File.ReadAllText(archivoConfig);
         }
 
-        private void Verify_Load(object sender, EventArgs e)
+        private async void Verify_Load(object sender, EventArgs e)
         {
-            InitializeReaders();
+            pbLoading.Visible = true;
+            pbLoading.Refresh();
+            VerifyMessageLbl.Text = "Cargando base de datos de huellas...";
+            VerifyMessageLbl.Refresh();
+            try
+            {
+                InitializeReaders();
+                Constants.ResultCode result = reader.GetStatus();
 
-            Constants.ResultCode result = reader.GetStatus();
-            if (result == Constants.ResultCode.DP_SUCCESS)
-            {
-                if (reader.Status.Status == Constants.ReaderStatuses.DP_STATUS_READY)
+                if (result == Constants.ResultCode.DP_SUCCESS)
                 {
-                    reader.On_Captured += new Reader.CaptureCallback(reader_On_Captured);
-                    VerificationCapture();
-                    VerifyMessageLbl.Text = "Fingerprint Reader found and status is ready";
+                    if (reader.Status.Status == Constants.ReaderStatuses.DP_STATUS_READY)
+                    {
+                        reader.On_Captured += new Reader.CaptureCallback(reader_On_Captured);
+                        VerificationCapture();
+                        //VerifyMessageLbl.Text = "Fingerprint Reader found and status is ready";
+                        VerifyMessageLbl.Text = "Lector listo. Procesando datos...";
+                    }
                 }
+                else
+                {
+                    VerifyMessageLbl.Text = "Could not perform capture. Reader result code :" + result.ToString();
+                }
+
+                await Task.Run(() =>
+                {
+                    //System.Threading.Thread.Sleep(9000);
+                    CargarHuellasDesdeBD();
+                });
+                VerifyMessageLbl.Text = "Carga completada. Lector listo.";
             }
-            else
+            catch (Exception ex)
             {
-                VerifyMessageLbl.Text = "Could not perform capture. Reader result code :" + result.ToString();
+                MessageBox.Show("Error: " + ex.Message);
             }
+            finally
+            {
+                // 4. Ocultar el cargando pase lo que pase
+                pbLoading.Visible = false;
+            }
+        }
+
+        private void CargarHuellasDesdeBD()
+        {
             try
             {
                 using (SqlConnection conexion = new SqlConnection(cadenaConexion))
@@ -95,8 +124,6 @@ namespace UareUWindowsMSSQLCSharp
             {
                 MessageBox.Show("Error al conectar a la base de datos: " + ex.Message);
             }
-
-
         }
         private void InitializeReaders()
         {
@@ -151,7 +178,6 @@ namespace UareUWindowsMSSQLCSharp
                 if (fmd != null)
                 {
                     bool boolValidacion = false;
-
                     List<Fmd> fmdsParaComparar = enrolledFmdList.Select(c => c.Huella).ToList();
                     IdentifyResult vResult = Comparison.Identify(fmd, 0, fmdsParaComparar, 21474, 5);
                     if (vResult.ResultCode == Constants.ResultCode.DP_SUCCESS)
@@ -221,23 +247,16 @@ namespace UareUWindowsMSSQLCSharp
                             MessageBox.Show("Formato de ruta no válido.");
                         }
                     }
-                            
-                        
-                    
                 }
                 else
                 {
                     UpdateVerifyMessage("Please swipe finger again", null, "");
                 }
-
-
             }
             else
             {
                 UpdateVerifyMessage("Please swipe finger again", null, "");
             }
-
-
         }
 
         private DataResult<Fmd> ExtractFmdfromByte(byte[] fmdByte)
@@ -265,83 +284,6 @@ namespace UareUWindowsMSSQLCSharp
             return enrolledFmd;
         }
 
-        private DataResult<Fmd> ExtractFmdfromBmp(Bitmap img)
-        {
-            preEnrollmentFmd = new List<Fmd>();
-            byte[] imageByte = ExtractByteArray(img);
-            int i = 0;
-            //height, width and resolution must be same as those of image in ExtractByteArray
-            DataResult<Fmd> fmd = DPUruNet.FeatureExtraction.CreateFmdFromRaw(imageByte, 0, 1, img.Width, img.Height, reader.Capabilities.Resolutions[0], Constants.Formats.Fmd.DP_PRE_REGISTRATION);
-           // DataResult<Fmd> fmd = DPUruNet.FeatureExtraction.CreateFmdFromRaw(imageByte, 0, 1, 504, 648, 1000, Constants.Formats.Fmd.DP_PRE_REGISTRATION);
-            if (fmd.ResultCode == Constants.ResultCode.DP_SUCCESS)
-            {
-                while (i < 4)
-                {
-                    preEnrollmentFmd.Add(fmd.Data);
-                    i++;
-                }
-                enrolledFmd = DPUruNet.Enrollment.CreateEnrollmentFmd(Constants.Formats.Fmd.DP_REGISTRATION, preEnrollmentFmd);
-                if (enrolledFmd.ResultCode != Constants.ResultCode.DP_SUCCESS)
-                { MessageBox.Show("fmd.ResultCode = " + fmd.ResultCode); }
-            }
-            else
-                MessageBox.Show("fmd.ResultCode = " + fmd.ResultCode);
-
-            return enrolledFmd;
-        }
-
-        private static byte[] ExtractByteArray(Bitmap img)
-        {
-            byte[] rawData = null;
-            byte[] bitData = null;
-          //ToDo: CreateFmdFromRaw only works on 8bpp bytearrays. As such if we have an image with 24bpp then average every 3 values in Bitmapdata and assign it to bitdata
-            if (img.PixelFormat == PixelFormat.Format8bppIndexed)
-            {
-                
-                //Lock the bitmap's bits
-                BitmapData bitmapdata = img.LockBits(new System.Drawing.Rectangle(0, 0, img.Width, img.Height), System.Drawing.Imaging.ImageLockMode.ReadWrite, img.PixelFormat);
-                //Declare an array to hold the bytes of bitmap
-                byte[] imgData = new byte[bitmapdata.Stride * bitmapdata.Height]; //stride=360, height 392
-
-                //Copy bitmapdata into array
-                Marshal.Copy(bitmapdata.Scan0, imgData, 0, imgData.Length);//imgData.length =141120
-
-                bitData = new byte[bitmapdata.Width * bitmapdata.Height];//ditmapdata.width =357, height = 392
-
-                for (int y = 0; y < bitmapdata.Height; y++)
-                {
-                    for (int x = 0; x < bitmapdata.Width; x++)
-                    {
-                        bitData[bitmapdata.Width * y + x] = imgData[y * bitmapdata.Stride + x];
-                    }
-                }
-
-                rawData = new byte[bitData.Length];
-
-                for (int i = 0; i < bitData.Length; i++)
-                {
-                    int avg = (img.Palette.Entries[bitData[i]].R + img.Palette.Entries[bitData[i]].G + img.Palette.Entries[bitData[i]].B) / 3;
-                    rawData[i] = (byte)avg;
-                }
-            }
-
-            else
-            {                
-               bitData = new byte[img.Width * img.Height];//ditmapdata.width =357, height = 392, bitdata.length=139944
-                for (int y = 0; y < img.Height; y++)
-                {
-                    for (int x = 0; x < img.Width; x ++)
-                    {
-                        Color pixel = img.GetPixel(x,y);
-                        bitData[img.Width * y + x] = (byte)((Convert.ToInt32(pixel.R) + Convert.ToInt32(pixel.G) + Convert.ToInt32(pixel.B) )/3);                        
-                    }
-                }               
-
-            }
-
-            return bitData;
-        }
-
         public static Bitmap CreateBitmap(Byte[] bytes, int width, int height)
         {
             byte[] rgbBytes = new byte[bytes.Length * 3];
@@ -362,8 +304,6 @@ namespace UareUWindowsMSSQLCSharp
             }
 
             bmp.UnlockBits(data);
-            //string path = Path.GetFullPath("../../Images/imageliveDP.bmp");
-            //bmp.Save(path);
             return bmp;
         }
 
@@ -436,19 +376,5 @@ namespace UareUWindowsMSSQLCSharp
                 return null;
             }
         }
-
-        private void SaveBtn_Click(object sender, EventArgs e)
-        {
-            if (verifyPicBox.Image != null)
-            {
-                saveFileDialog1.Filter = "Bitmap Files (*.bmp)|*.bmp";
-                saveFileDialog1.Title = "Save fingerprint as";
-                string filename= (saveFileDialog1.ShowDialog() == DialogResult.Cancel) ? "" : saveFileDialog1.FileName;
-
-                if (filename != "")
-                    verifyPicBox.Image.Save(filename, ImageFormat.Bmp);
-            }
-        }
-
     }
 }

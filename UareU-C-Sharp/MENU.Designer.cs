@@ -33,11 +33,16 @@ namespace UareUWindowsMSSQLCSharp
             this.cLIENTESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hUELLAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pAGOSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sALIRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cAPTURARToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cORTEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rEPORTEADORToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sALIRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblUsuarioInfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cLIENTESToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pAQUETESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -56,9 +61,12 @@ namespace UareUWindowsMSSQLCSharp
             // 
             // cLIENTESToolStripMenuItem
             // 
+            this.cLIENTESToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cLIENTESToolStripMenuItem1,
+            this.pAQUETESToolStripMenuItem});
             this.cLIENTESToolStripMenuItem.Name = "cLIENTESToolStripMenuItem";
-            this.cLIENTESToolStripMenuItem.Size = new System.Drawing.Size(141, 20);
-            this.cLIENTESToolStripMenuItem.Text = "REGISTRO DE CLIENTES";
+            this.cLIENTESToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
+            this.cLIENTESToolStripMenuItem.Text = "CATALOGOS";
             this.cLIENTESToolStripMenuItem.Click += new System.EventHandler(this.cLIENTESToolStripMenuItem_Click);
             // 
             // hUELLAToolStripMenuItem
@@ -78,13 +86,6 @@ namespace UareUWindowsMSSQLCSharp
             this.pAGOSToolStripMenuItem.Text = "PAGOS";
             this.pAGOSToolStripMenuItem.Click += new System.EventHandler(this.pAGOSToolStripMenuItem_Click);
             // 
-            // sALIRToolStripMenuItem
-            // 
-            this.sALIRToolStripMenuItem.Name = "sALIRToolStripMenuItem";
-            this.sALIRToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-            this.sALIRToolStripMenuItem.Text = "SALIR";
-            this.sALIRToolStripMenuItem.Click += new System.EventHandler(this.sALIRToolStripMenuItem_Click);
-            // 
             // cAPTURARToolStripMenuItem
             // 
             this.cAPTURARToolStripMenuItem.Name = "cAPTURARToolStripMenuItem";
@@ -102,22 +103,63 @@ namespace UareUWindowsMSSQLCSharp
             // rEPORTEADORToolStripMenuItem
             // 
             this.rEPORTEADORToolStripMenuItem.Name = "rEPORTEADORToolStripMenuItem";
-            this.rEPORTEADORToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
+            this.rEPORTEADORToolStripMenuItem.Size = new System.Drawing.Size(99, 20);
             this.rEPORTEADORToolStripMenuItem.Text = "REPORTEADOR";
             this.rEPORTEADORToolStripMenuItem.Click += new System.EventHandler(this.rEPORTEADORToolStripMenuItem_Click);
+            // 
+            // sALIRToolStripMenuItem
+            // 
+            this.sALIRToolStripMenuItem.Name = "sALIRToolStripMenuItem";
+            this.sALIRToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.sALIRToolStripMenuItem.Text = "SALIR";
+            this.sALIRToolStripMenuItem.Click += new System.EventHandler(this.sALIRToolStripMenuItem_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblUsuarioInfo});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.TabIndex = 1;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lblUsuarioInfo
+            // 
+            this.lblUsuarioInfo.Name = "lblUsuarioInfo";
+            this.lblUsuarioInfo.Size = new System.Drawing.Size(118, 17);
+            this.lblUsuarioInfo.Text = "toolStripStatusLabel1";
+            // 
+            // cLIENTESToolStripMenuItem1
+            // 
+            this.cLIENTESToolStripMenuItem1.Name = "cLIENTESToolStripMenuItem1";
+            this.cLIENTESToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.cLIENTESToolStripMenuItem1.Text = "CLIENTES";
+            this.cLIENTESToolStripMenuItem1.Click += new System.EventHandler(this.cLIENTESToolStripMenuItem1_Click);
+            // 
+            // pAQUETESToolStripMenuItem
+            // 
+            this.pAQUETESToolStripMenuItem.Name = "pAQUETESToolStripMenuItem";
+            this.pAQUETESToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pAQUETESToolStripMenuItem.Text = "PAQUETES";
+            this.pAQUETESToolStripMenuItem.Click += new System.EventHandler(this.pAQUETESToolStripMenuItem_Click);
             // 
             // MENU
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MENU";
             this.Text = "MENU";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MENU_FormClosed);
+            this.Load += new System.EventHandler(this.MENU_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,5 +175,9 @@ namespace UareUWindowsMSSQLCSharp
         private System.Windows.Forms.ToolStripMenuItem cAPTURARToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cORTEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rEPORTEADORToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel lblUsuarioInfo;
+        private System.Windows.Forms.ToolStripMenuItem cLIENTESToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem pAQUETESToolStripMenuItem;
     }
 }
