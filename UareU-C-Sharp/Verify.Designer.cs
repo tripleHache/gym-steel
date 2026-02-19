@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Verify));
             this.verifyPicBox = new System.Windows.Forms.PictureBox();
             this.VerifyMessageLbl = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -38,12 +39,15 @@
             this.lblCliente = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.lblVencimiento = new System.Windows.Forms.Label();
+            this.pbLoading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.verifyPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // verifyPicBox
@@ -78,7 +82,6 @@
             this.Loadbtn.Text = "Load Image";
             this.Loadbtn.UseVisualStyleBackColor = true;
             this.Loadbtn.Visible = false;
-            this.Loadbtn.Click += new System.EventHandler(this.Loadbtn_Click);
             // 
             // pictureBox1
             // 
@@ -98,7 +101,6 @@
             this.label1.Size = new System.Drawing.Size(564, 42);
             this.label1.TabIndex = 4;
             this.label1.Text = "Bienvenido a GYM STEEL & Co.";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // lblCliente
             // 
@@ -131,14 +133,34 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.pictureBox1);
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblVencimiento);
             this.splitContainer1.Panel2.Controls.Add(this.lblCliente);
             this.splitContainer1.Size = new System.Drawing.Size(549, 513);
             this.splitContainer1.SplitterDistance = 353;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // lblVencimiento
+            // 
+            this.lblVencimiento.AutoSize = true;
+            this.lblVencimiento.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVencimiento.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lblVencimiento.Location = new System.Drawing.Point(24, 109);
+            this.lblVencimiento.Name = "lblVencimiento";
+            this.lblVencimiento.Size = new System.Drawing.Size(0, 37);
+            this.lblVencimiento.TabIndex = 6;
+            this.lblVencimiento.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pbLoading
+            // 
+            this.pbLoading.Image = ((System.Drawing.Image)(resources.GetObject("pbLoading.Image")));
+            this.pbLoading.Location = new System.Drawing.Point(822, 267);
+            this.pbLoading.Name = "pbLoading";
+            this.pbLoading.Size = new System.Drawing.Size(200, 201);
+            this.pbLoading.TabIndex = 8;
+            this.pbLoading.TabStop = false;
             // 
             // Verify
             // 
@@ -148,6 +170,7 @@
             this.BackgroundImage = global::UareUWindowsMSSQLCSharp.Properties.Resources.IMG_20241025_WA00311;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(1834, 724);
+            this.Controls.Add(this.pbLoading);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -157,6 +180,7 @@
             this.Name = "Verify";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CHECADOR";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Verify_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Verify_FormClosed);
             this.Load += new System.EventHandler(this.Verify_Load);
             ((System.ComponentModel.ISupportInitialize)(this.verifyPicBox)).EndInit();
@@ -166,6 +190,7 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,6 +208,8 @@
         private System.Windows.Forms.Label lblCliente;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label lblVencimiento;
+        private System.Windows.Forms.PictureBox pbLoading;
     }
 }
 

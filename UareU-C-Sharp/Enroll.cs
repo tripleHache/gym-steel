@@ -23,6 +23,7 @@ namespace UareUWindowsMSSQLCSharp
         private DataResult<Fmd> enrollmentFmd, fmd1, fmd2;
         public Form_Main _sender;
         private string urlHuella = "";
+        public Fmd EnrollmentFmdResult { get; private set; }
 
         public Enroll(string nombrearchivohuella)
         {
@@ -36,6 +37,9 @@ namespace UareUWindowsMSSQLCSharp
             {
                 //UpdateEnrollMessage("Fingerprint Reader not found. Please check if reader is plugged in and try again", null);
                 MessageBox.Show("Fingerprint Reader not found. Please check if reader is plugged in and try again");
+                this.DialogResult = DialogResult.Cancel;
+                this.Close();
+                return;
             }
             else
             {
@@ -45,7 +49,7 @@ namespace UareUWindowsMSSQLCSharp
         }
        private void Enroll_Load(object sender, EventArgs e)
         {
-           InitializeReaders();
+           /*InitializeReaders();
             try
             {               
                 Constants.ResultCode result = reader.GetStatus();
@@ -60,7 +64,7 @@ namespace UareUWindowsMSSQLCSharp
             {
                 MessageBox.Show(ex.Message);
             }
-           
+           */
         }
         private void StartEnrollment(Constants.ResultCode readerResult)
         {
@@ -90,59 +94,90 @@ namespace UareUWindowsMSSQLCSharp
              MessageBox.Show("CaptureResult: " + captureResult.ToString());
             }
         }
+        private void OnEnrollmentSuccess(Fmd fmd)
+        {
+            this.EnrollmentFmdResult = fmd; // Guardamos el resultado
+            this.DialogResult = DialogResult.OK; // Cerramos con éxito
+            //this.Close();
+        }
 
         void reader_On_Captured(CaptureResult capResult)
         {
-            //Aqui entra despues de capturar la huella
+            if (reader == null) return;
             if (capResult.Quality == Constants.CaptureQuality.DP_QUALITY_GOOD)
             {
                 count++;
-                DataResult<Fmd> fmd = FeatureExtraction.CreateFmdFromFid(capResult.Data, Constants.Formats.Fmd.DP_PRE_REGISTRATION);
-            
-                // Get view bytes to create bitmap.
-                foreach (Fid.Fiv fiv in capResult.Data.Views)
+                DataResult<Fmd> fmdResult = FeatureExtraction.CreateFmdFromFid(capResult.Data, Constants.Formats.Fmd.DP_PRE_REGISTRATION);
+                if (fmdResult.ResultCode == Constants.ResultCode.DP_SUCCESS)
                 {
-                    //Ask user to press finger to get fingerprint
-                    UpdateEnrollMessage("Click save button to save fingerprint", HelperFunctions.CreateBitmap(fiv.RawImage, fiv.Width, fiv.Height));
-                    break;
+                    preEnrollmentFmd.Add(fmdResult.Data);
+                    DataResult<Fmd> enrollmentFmd = DPUruNet.Enrollment.CreateEnrollmentFmd(Constants.Formats.Fmd.DP_REGISTRATION, preEnrollmentFmd);
+
+                    if (enrollmentFmd.ResultCode == Constants.ResultCode.DP_SUCCESS)
+                    {
+                        // ¡ÉXITO! Ya se completaron las capturas necesarias y se creó la plantilla
+                        this.EnrollmentFmdResult = enrollmentFmd.Data;
+                        MostrarImagenHuella(capResult, preEnrollmentFmd.Count);
+                        UpdateEnrollMessage("CAPTURAS COMPLETADAS.", null,0);
+                        OnEnrollmentSuccess(enrollmentFmd.Data);
+                    }
+                    else if (enrollmentFmd.ResultCode == Constants.ResultCode.DP_ENROLLMENT_NOT_READY)
+                    {
+                        int faltantes = 4 - preEnrollmentFmd.Count;
+                        MostrarImagenHuella(capResult, preEnrollmentFmd.Count);
+                        UpdateEnrollMessage($"MUESTRA CAPTURADA. \nFAVOR DE PONER EL DEDO {faltantes} VEZ/VECES MÁS.", null, 0);
+
+                        switch (preEnrollmentFmd.Count)
+                        {
+                            case 1:
+                                this.Invoke(new Action(() => {
+                                    pictureBox1.BorderStyle = BorderStyle.FixedSingle;
+                                    pictureBox1.Refresh();
+                                }));
+                                break;
+                            case 2:
+                                this.Invoke(new Action(() => {
+                                    pictureBox2.BorderStyle = BorderStyle.FixedSingle;
+                                    pictureBox2.Refresh();
+                                }));
+                                break;
+                            case 3:
+                                this.Invoke(new Action(() => {
+                                    pictureBox3.BorderStyle = BorderStyle.FixedSingle;
+                                    pictureBox3.Refresh();
+                                }));
+                                break;
+                            case 4:
+                                this.Invoke(new Action(() =>
+                                {
+                                    MessageBox.Show("ERROR! DEBE CAPTURAR EL MISMO DEDO.");
+                                    this.DialogResult = DialogResult.Cancel;
+                                }));
+                                return;
+                        }
+                        
+                    }
                 }
-
-                //preEnrollmentFmd.Add(fmd.Data);
-                //enrollmentFmd = DPUruNet.Enrollment.CreateEnrollmentFmd(Constants.Formats.Fmd.DP_REGISTRATION, preEnrollmentFmd);
-
-                ////if (enrollmentFmd.ResultCode == Constants.ResultCode.DP_SUCCESS)
-                //{
-                //    if (fingerindex == 0)
-                //    {
-                //        fmd1 = enrollmentFmd;
-                //        fingerindex++;
-                //        count = 0;
-                //        preEnrollmentFmd.Clear();
-                //        UpdateEnrollMessage("Please swipe 2nd finger", null);
-                //    }
-                //    else if (fingerindex == 1)
-                //    {
-                //        fmd2 = enrollmentFmd;
-                //        preEnrollmentFmd.Clear();
-                //        UpdateEnrollMessage("User " + userIDTb.Text.ToString() + " Successfully Enrolled!", null);
-                //        string userid = userIDTb.Text.ToString();
-                //        HelperFunctions.updateFMDUserIDList(fmd1.Data, fmd2.Data, userid);
-
-                //        if (!CheckIfUserExists())
-                //        {
-                //            SaveEnrolledFmd(userIDTb.Text.ToString(), Fmd.SerializeXml(fmd1.Data), Fmd.SerializeXml(fmd2.Data));
-                //        }
-
-                //    }
-
-                // }
-
+                else
+                {
+                    UpdateEnrollMessage("Error al extraer características de la huella.", null,0);
+                }
             }
-
-           
-
+            else
+            {
+                UpdateEnrollMessage("Mala calidad de captura. Intente de nuevo.", null,0);
+            }
         }
-        
+
+        private void MostrarImagenHuella(CaptureResult capResult, int nroHuella)
+        {
+            foreach (Fid.Fiv fiv in capResult.Data.Views)
+            {
+                UpdateEnrollMessage(null, HelperFunctions.CreateBitmap(fiv.RawImage, fiv.Width, fiv.Height),nroHuella);
+                break;
+            }
+        }
+
         public void SaveEnrolledFmd(string userName, string xmlFMD1, string xmlFMD2)
         {
             string saveFmdScript = "Insert into Users values ('" + userName + "', '" + xmlFMD1 + "', '" + xmlFMD2 + "' )";
@@ -151,22 +186,40 @@ namespace UareUWindowsMSSQLCSharp
         }
 
 
-        delegate void UpdateEnrollMessageCallback(string text1, Bitmap image);
-        private void UpdateEnrollMessage(string text, Bitmap image)
+        delegate void UpdateEnrollMessageCallback(string text1, Bitmap image, int nrohuella);
+        private void UpdateEnrollMessage(string text, Bitmap image, int nrohuella)
         {
             //Aqui tambien 2
             if (this.messagelbl.InvokeRequired)
             {
                 UpdateEnrollMessageCallback callBack = new UpdateEnrollMessageCallback(UpdateEnrollMessage);
-                this.Invoke(callBack, new object[] { text, image });
+                this.Invoke(callBack, new object[] { text, image, nrohuella });
             }
             else
             {
                 messagelbl.Text = text;
                 if (image != null)
                 {
-                    enrollPicBox.Image = image;
-                    enrollPicBox.Refresh();
+                    switch (nrohuella)
+                    {
+                        case 1:
+                            enrollPicBox.Image = image;
+                            enrollPicBox.Refresh();
+                            break;
+                        case 2:
+                            pictureBox1.Image = image;
+                            pictureBox1.Refresh();
+                            break;
+                        case 3:
+                            pictureBox2.Image = image;
+                            pictureBox2.Refresh();
+                            break;
+                        case 4:
+                            pictureBox3.Image = image;
+                            pictureBox3.Refresh();
+                            break;
+                    }
+                    
                 }
             }
 
@@ -195,6 +248,29 @@ namespace UareUWindowsMSSQLCSharp
             else if ((reader.Status.Status != Constants.ReaderStatuses.DP_STATUS_READY))
             {
                 throw new Exception("Reader Status - " + reader.Status.Status);
+            }
+        }
+
+        private void Enroll_Shown(object sender, EventArgs e)
+        {
+            InitializeReaders();
+            if (reader == null)
+            {
+                return;
+            }
+            try
+            {
+                Constants.ResultCode result = reader.GetStatus();
+                if (result == Constants.ResultCode.DP_SUCCESS)
+                {
+                    StartEnrollment(result);
+                }
+                else
+                    MessageBox.Show("Reader status is:" + result);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

@@ -39,19 +39,25 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.dgvClientes = new System.Windows.Forms.DataGridView();
-            this.cbSexo = new System.Windows.Forms.ComboBox();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sexo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.edad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.huella = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbSexo = new System.Windows.Forms.ComboBox();
+            this.tbidCliente = new System.Windows.Forms.TextBox();
+            this.btnEliminar = new System.Windows.Forms.Button();
+            this.lblBuscarPorNombre = new System.Windows.Forms.Label();
+            this.tbBuscar = new System.Windows.Forms.TextBox();
+            this.btnValidarStatus = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             this.SuspendLayout();
             // 
             // enrollbtn
             // 
-            this.enrollbtn.Location = new System.Drawing.Point(557, 127);
+            this.enrollbtn.Location = new System.Drawing.Point(701, 139);
             this.enrollbtn.Name = "enrollbtn";
-            this.enrollbtn.Size = new System.Drawing.Size(124, 23);
+            this.enrollbtn.Size = new System.Drawing.Size(233, 23);
             this.enrollbtn.TabIndex = 4;
             this.enrollbtn.Text = "CAPTURAR HUELLA";
             this.enrollbtn.UseVisualStyleBackColor = true;
@@ -66,7 +72,6 @@
             this.verifybtn.Text = "Verify";
             this.verifybtn.UseVisualStyleBackColor = true;
             this.verifybtn.Visible = false;
-            this.verifybtn.Click += new System.EventHandler(this.verifybtn_Click);
             // 
             // readerNotFoundlbl
             // 
@@ -91,13 +96,13 @@
             // 
             this.tbNombre.Location = new System.Drawing.Point(616, 57);
             this.tbNombre.Name = "tbNombre";
-            this.tbNombre.Size = new System.Drawing.Size(320, 20);
+            this.tbNombre.Size = new System.Drawing.Size(444, 20);
             this.tbNombre.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(554, 98);
+            this.label2.Location = new System.Drawing.Point(654, 98);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 6;
@@ -105,7 +110,7 @@
             // 
             // tbEdad
             // 
-            this.tbEdad.Location = new System.Drawing.Point(616, 95);
+            this.tbEdad.Location = new System.Drawing.Point(716, 95);
             this.tbEdad.MaxLength = 99;
             this.tbEdad.Name = "tbEdad";
             this.tbEdad.Size = new System.Drawing.Size(79, 20);
@@ -113,16 +118,17 @@
             // 
             // tbHuella
             // 
-            this.tbHuella.Location = new System.Drawing.Point(687, 130);
+            this.tbHuella.Location = new System.Drawing.Point(629, 120);
             this.tbHuella.Name = "tbHuella";
             this.tbHuella.ReadOnly = true;
-            this.tbHuella.Size = new System.Drawing.Size(249, 20);
+            this.tbHuella.Size = new System.Drawing.Size(373, 20);
             this.tbHuella.TabIndex = 9;
+            this.tbHuella.Visible = false;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(729, 98);
+            this.label3.Location = new System.Drawing.Point(829, 98);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 10;
@@ -130,7 +136,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(629, 205);
+            this.button1.Enabled = false;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(606, 205);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(188, 51);
             this.button1.TabIndex = 5;
@@ -145,22 +153,13 @@
             this.id,
             this.nombre,
             this.sexo,
-            this.edad});
-            this.dgvClientes.Location = new System.Drawing.Point(4, 6);
+            this.edad,
+            this.huella});
+            this.dgvClientes.Location = new System.Drawing.Point(4, 45);
             this.dgvClientes.Name = "dgvClientes";
-            this.dgvClientes.Size = new System.Drawing.Size(547, 344);
+            this.dgvClientes.Size = new System.Drawing.Size(547, 305);
             this.dgvClientes.TabIndex = 100;
-            // 
-            // cbSexo
-            // 
-            this.cbSexo.FormattingEnabled = true;
-            this.cbSexo.Items.AddRange(new object[] {
-            "M",
-            "F"});
-            this.cbSexo.Location = new System.Drawing.Point(782, 94);
-            this.cbSexo.Name = "cbSexo";
-            this.cbSexo.Size = new System.Drawing.Size(121, 21);
-            this.cbSexo.TabIndex = 3;
+            this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_CellDoubleClick);
             // 
             // id
             // 
@@ -187,11 +186,85 @@
             this.edad.Name = "edad";
             this.edad.ReadOnly = true;
             // 
+            // huella
+            // 
+            this.huella.HeaderText = "HUELLA";
+            this.huella.Name = "huella";
+            this.huella.ReadOnly = true;
+            this.huella.Visible = false;
+            // 
+            // cbSexo
+            // 
+            this.cbSexo.FormattingEnabled = true;
+            this.cbSexo.Items.AddRange(new object[] {
+            "M",
+            "F"});
+            this.cbSexo.Location = new System.Drawing.Point(882, 94);
+            this.cbSexo.Name = "cbSexo";
+            this.cbSexo.Size = new System.Drawing.Size(121, 21);
+            this.cbSexo.TabIndex = 3;
+            // 
+            // tbidCliente
+            // 
+            this.tbidCliente.Location = new System.Drawing.Point(616, 21);
+            this.tbidCliente.MaxLength = 99;
+            this.tbidCliente.Name = "tbidCliente";
+            this.tbidCliente.Size = new System.Drawing.Size(79, 20);
+            this.tbidCliente.TabIndex = 101;
+            this.tbidCliente.Visible = false;
+            // 
+            // btnEliminar
+            // 
+            this.btnEliminar.Enabled = false;
+            this.btnEliminar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEliminar.ForeColor = System.Drawing.Color.Red;
+            this.btnEliminar.Location = new System.Drawing.Point(847, 205);
+            this.btnEliminar.Name = "btnEliminar";
+            this.btnEliminar.Size = new System.Drawing.Size(188, 51);
+            this.btnEliminar.TabIndex = 102;
+            this.btnEliminar.Text = "ELIMINAR CLIENTE";
+            this.btnEliminar.UseVisualStyleBackColor = true;
+            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
+            // 
+            // lblBuscarPorNombre
+            // 
+            this.lblBuscarPorNombre.AutoSize = true;
+            this.lblBuscarPorNombre.Location = new System.Drawing.Point(12, 21);
+            this.lblBuscarPorNombre.Name = "lblBuscarPorNombre";
+            this.lblBuscarPorNombre.Size = new System.Drawing.Size(133, 13);
+            this.lblBuscarPorNombre.TabIndex = 103;
+            this.lblBuscarPorNombre.Text = "Buscar cliente por nombre:";
+            // 
+            // tbBuscar
+            // 
+            this.tbBuscar.Location = new System.Drawing.Point(151, 18);
+            this.tbBuscar.Name = "tbBuscar";
+            this.tbBuscar.Size = new System.Drawing.Size(400, 20);
+            this.tbBuscar.TabIndex = 104;
+            this.tbBuscar.TextChanged += new System.EventHandler(this.tbBuscar_TextChanged);
+            // 
+            // btnValidarStatus
+            // 
+            this.btnValidarStatus.Enabled = false;
+            this.btnValidarStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnValidarStatus.Location = new System.Drawing.Point(731, 277);
+            this.btnValidarStatus.Name = "btnValidarStatus";
+            this.btnValidarStatus.Size = new System.Drawing.Size(188, 51);
+            this.btnValidarStatus.TabIndex = 105;
+            this.btnValidarStatus.Text = "VALIDAR STATUS";
+            this.btnValidarStatus.UseVisualStyleBackColor = true;
+            this.btnValidarStatus.Click += new System.EventHandler(this.btnValidarStatus_Click);
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(957, 362);
+            this.ClientSize = new System.Drawing.Size(1084, 362);
+            this.Controls.Add(this.btnValidarStatus);
+            this.Controls.Add(this.tbBuscar);
+            this.Controls.Add(this.lblBuscarPorNombre);
+            this.Controls.Add(this.btnEliminar);
+            this.Controls.Add(this.tbidCliente);
             this.Controls.Add(this.cbSexo);
             this.Controls.Add(this.dgvClientes);
             this.Controls.Add(this.button1);
@@ -206,7 +279,6 @@
             this.Controls.Add(this.enrollbtn);
             this.Name = "Form_Main";
             this.Text = "Main";
-            this.Load += new System.EventHandler(this.Form_Main_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -231,6 +303,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn nombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn sexo;
         private System.Windows.Forms.DataGridViewTextBoxColumn edad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn huella;
+        private System.Windows.Forms.TextBox tbidCliente;
+        private System.Windows.Forms.Button btnEliminar;
+        private System.Windows.Forms.Label lblBuscarPorNombre;
+        private System.Windows.Forms.TextBox tbBuscar;
+        private System.Windows.Forms.Button btnValidarStatus;
     }
 }
 

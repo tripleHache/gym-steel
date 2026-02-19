@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClienteHuella.cs" />
     <Compile Include="Corte.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +85,12 @@
     <Compile Include="LOGIN.Designer.cs">
       <DependentUpon>LOGIN.cs</DependentUpon>
     </Compile>
+    <Compile Include="MEMBRESIAS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MEMBRESIAS.Designer.cs">
+      <DependentUpon>MEMBRESIAS.cs</DependentUpon>
+    </Compile>
     <Compile Include="MENU.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +103,12 @@
     <Compile Include="Pagos.Designer.cs">
       <DependentUpon>Pagos.cs</DependentUpon>
     </Compile>
+    <Compile Include="PAQUETES.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PAQUETES.Designer.cs">
+      <DependentUpon>PAQUETES.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REPORTEADOR.cs">
@@ -104,6 +117,13 @@
     <Compile Include="REPORTEADOR.Designer.cs">
       <DependentUpon>REPORTEADOR.cs</DependentUpon>
     </Compile>
+    <Compile Include="STATUS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="STATUS.Designer.cs">
+      <DependentUpon>STATUS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsuarioSesion.cs" />
     <Compile Include="Verify.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LOGIN.resx">
       <DependentUpon>LOGIN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MEMBRESIAS.resx">
+      <DependentUpon>MEMBRESIAS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MENU.resx">
       <DependentUpon>MENU.cs</DependentUpon>
@@ -140,6 +163,9 @@
     </Compile>
     <EmbeddedResource Include="REPORTEADOR.resx">
       <DependentUpon>REPORTEADOR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="STATUS.resx">
+      <DependentUpon>STATUS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Verify.resx">
       <DependentUpon>Verify.cs</DependentUpon>

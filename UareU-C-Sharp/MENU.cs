@@ -35,15 +35,7 @@ namespace UareUWindowsMSSQLCSharp
 
         private void cLIENTESToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (form_huella)
-            {
-                MessageBox.Show("Debe cerrar el formulario para validar huella");
-            }
-            else
-            {
-                Form_Main regClientes = new Form_Main();
-                regClientes.ShowDialog();
-            }
+         
         }
 
         private void pAGOSToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,6 +69,35 @@ namespace UareUWindowsMSSQLCSharp
         {
             REPORTEADOR objReporteador = new REPORTEADOR();
             objReporteador.ShowDialog();
+        }
+
+        private void MENU_Load(object sender, EventArgs e)
+        {
+            lblUsuarioInfo.Text = $"Usuario: {UsuarioSesion.Nombre}";
+
+            if (UsuarioSesion.Rol == 2)
+            {
+                pAQUETESToolStripMenuItem.Visible = false;
+            }
+        }
+
+        private void cLIENTESToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (form_huella)
+            {
+                MessageBox.Show("Debe cerrar el formulario para validar huella");
+            }
+            else
+            {
+                Form_Main regClientes = new Form_Main();
+                regClientes.ShowDialog();
+            }
+        }
+
+        private void pAQUETESToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MEMBRESIAS objMembresias = new MEMBRESIAS();
+            objMembresias.ShowDialog();
         }
     }
 }

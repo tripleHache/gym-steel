@@ -52,10 +52,15 @@ namespace UareUWindowsMSSQLCSharp
             this.precio = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.frecuencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nroPersonas = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tbIdPaquete = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbMetodoPago = new System.Windows.Forms.ComboBox();
             this.tbDescripcion = new System.Windows.Forms.TextBox();
+            this.lblfiltropornombre = new System.Windows.Forms.Label();
+            this.tbBuscarCliente = new System.Windows.Forms.TextBox();
+            this.tbNroPersonas = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPaquetes)).BeginInit();
             this.SuspendLayout();
@@ -63,7 +68,7 @@ namespace UareUWindowsMSSQLCSharp
             // btnPago
             // 
             this.btnPago.Enabled = false;
-            this.btnPago.Location = new System.Drawing.Point(763, 353);
+            this.btnPago.Location = new System.Drawing.Point(574, 511);
             this.btnPago.Name = "btnPago";
             this.btnPago.Size = new System.Drawing.Size(157, 78);
             this.btnPago.TabIndex = 0;
@@ -75,7 +80,7 @@ namespace UareUWindowsMSSQLCSharp
             // 
             this.lblPaquete.AutoSize = true;
             this.lblPaquete.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPaquete.Location = new System.Drawing.Point(634, 148);
+            this.lblPaquete.Location = new System.Drawing.Point(167, 5);
             this.lblPaquete.Name = "lblPaquete";
             this.lblPaquete.Size = new System.Drawing.Size(121, 24);
             this.lblPaquete.TabIndex = 1;
@@ -91,10 +96,10 @@ namespace UareUWindowsMSSQLCSharp
             this.nombre,
             this.sexo,
             this.edad});
-            this.dgvClientes.Location = new System.Drawing.Point(7, 31);
+            this.dgvClientes.Location = new System.Drawing.Point(490, 69);
             this.dgvClientes.Name = "dgvClientes";
             this.dgvClientes.ReadOnly = true;
-            this.dgvClientes.Size = new System.Drawing.Size(445, 407);
+            this.dgvClientes.Size = new System.Drawing.Size(445, 373);
             this.dgvClientes.TabIndex = 3;
             this.dgvClientes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientes_CellDoubleClick);
             // 
@@ -130,7 +135,7 @@ namespace UareUWindowsMSSQLCSharp
             // 
             this.lblCabeceraClientes.AutoSize = true;
             this.lblCabeceraClientes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCabeceraClientes.Location = new System.Drawing.Point(175, 4);
+            this.lblCabeceraClientes.Location = new System.Drawing.Point(658, 8);
             this.lblCabeceraClientes.Name = "lblCabeceraClientes";
             this.lblCabeceraClientes.Size = new System.Drawing.Size(109, 24);
             this.lblCabeceraClientes.TabIndex = 4;
@@ -139,23 +144,24 @@ namespace UareUWindowsMSSQLCSharp
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(477, 31);
+            this.label1.Location = new System.Drawing.Point(58, 511);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.Size = new System.Drawing.Size(59, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "CLIENTE";
+            this.label1.Text = "CLIENTES";
             // 
             // tbCliente
             // 
-            this.tbCliente.Location = new System.Drawing.Point(570, 31);
+            this.tbCliente.Location = new System.Drawing.Point(143, 441);
+            this.tbCliente.Multiline = true;
             this.tbCliente.Name = "tbCliente";
             this.tbCliente.ReadOnly = true;
-            this.tbCliente.Size = new System.Drawing.Size(267, 20);
+            this.tbCliente.Size = new System.Drawing.Size(267, 156);
             this.tbCliente.TabIndex = 6;
             // 
             // tbIdCliente
             // 
-            this.tbIdCliente.Location = new System.Drawing.Point(504, 4);
+            this.tbIdCliente.Location = new System.Drawing.Point(37, 10);
             this.tbIdCliente.Name = "tbIdCliente";
             this.tbIdCliente.Size = new System.Drawing.Size(59, 20);
             this.tbIdCliente.TabIndex = 8;
@@ -163,7 +169,7 @@ namespace UareUWindowsMSSQLCSharp
             // 
             // tbFrecuencia
             // 
-            this.tbFrecuencia.Location = new System.Drawing.Point(527, 386);
+            this.tbFrecuencia.Location = new System.Drawing.Point(154, 319);
             this.tbFrecuencia.Name = "tbFrecuencia";
             this.tbFrecuencia.ReadOnly = true;
             this.tbFrecuencia.Size = new System.Drawing.Size(168, 20);
@@ -172,7 +178,7 @@ namespace UareUWindowsMSSQLCSharp
             // lblFrecuencia
             // 
             this.lblFrecuencia.AutoSize = true;
-            this.lblFrecuencia.Location = new System.Drawing.Point(465, 386);
+            this.lblFrecuencia.Location = new System.Drawing.Point(92, 319);
             this.lblFrecuencia.Name = "lblFrecuencia";
             this.lblFrecuencia.Size = new System.Drawing.Size(60, 13);
             this.lblFrecuencia.TabIndex = 9;
@@ -180,7 +186,7 @@ namespace UareUWindowsMSSQLCSharp
             // 
             // tbPrecio
             // 
-            this.tbPrecio.Location = new System.Drawing.Point(527, 360);
+            this.tbPrecio.Location = new System.Drawing.Point(154, 293);
             this.tbPrecio.Name = "tbPrecio";
             this.tbPrecio.ReadOnly = true;
             this.tbPrecio.Size = new System.Drawing.Size(98, 20);
@@ -189,7 +195,7 @@ namespace UareUWindowsMSSQLCSharp
             // lblPrecio
             // 
             this.lblPrecio.AutoSize = true;
-            this.lblPrecio.Location = new System.Drawing.Point(465, 360);
+            this.lblPrecio.Location = new System.Drawing.Point(92, 293);
             this.lblPrecio.Name = "lblPrecio";
             this.lblPrecio.Size = new System.Drawing.Size(37, 13);
             this.lblPrecio.TabIndex = 11;
@@ -197,7 +203,7 @@ namespace UareUWindowsMSSQLCSharp
             // 
             // tbGrupo
             // 
-            this.tbGrupo.Location = new System.Drawing.Point(527, 414);
+            this.tbGrupo.Location = new System.Drawing.Point(154, 345);
             this.tbGrupo.Name = "tbGrupo";
             this.tbGrupo.ReadOnly = true;
             this.tbGrupo.Size = new System.Drawing.Size(168, 20);
@@ -206,7 +212,7 @@ namespace UareUWindowsMSSQLCSharp
             // lblGrupo
             // 
             this.lblGrupo.AutoSize = true;
-            this.lblGrupo.Location = new System.Drawing.Point(465, 414);
+            this.lblGrupo.Location = new System.Drawing.Point(92, 345);
             this.lblGrupo.Name = "lblGrupo";
             this.lblGrupo.Size = new System.Drawing.Size(36, 13);
             this.lblGrupo.TabIndex = 13;
@@ -220,10 +226,11 @@ namespace UareUWindowsMSSQLCSharp
             this.grupo,
             this.precio,
             this.frecuencia,
-            this.descripcion});
-            this.dgvPaquetes.Location = new System.Drawing.Point(468, 179);
+            this.descripcion,
+            this.nroPersonas});
+            this.dgvPaquetes.Location = new System.Drawing.Point(1, 36);
             this.dgvPaquetes.Name = "dgvPaquetes";
-            this.dgvPaquetes.Size = new System.Drawing.Size(452, 150);
+            this.dgvPaquetes.Size = new System.Drawing.Size(452, 233);
             this.dgvPaquetes.TabIndex = 15;
             this.dgvPaquetes.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPaquetes_CellDoubleClick);
             // 
@@ -257,9 +264,15 @@ namespace UareUWindowsMSSQLCSharp
             this.descripcion.Name = "descripcion";
             this.descripcion.ReadOnly = true;
             // 
+            // nroPersonas
+            // 
+            this.nroPersonas.HeaderText = "NRO PERSONAS";
+            this.nroPersonas.Name = "nroPersonas";
+            this.nroPersonas.ReadOnly = true;
+            // 
             // tbIdPaquete
             // 
-            this.tbIdPaquete.Location = new System.Drawing.Point(651, 360);
+            this.tbIdPaquete.Location = new System.Drawing.Point(278, 293);
             this.tbIdPaquete.Name = "tbIdPaquete";
             this.tbIdPaquete.Size = new System.Drawing.Size(59, 20);
             this.tbIdPaquete.TabIndex = 16;
@@ -268,7 +281,7 @@ namespace UareUWindowsMSSQLCSharp
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(477, 81);
+            this.label2.Location = new System.Drawing.Point(481, 474);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(87, 13);
             this.label2.TabIndex = 17;
@@ -282,24 +295,62 @@ namespace UareUWindowsMSSQLCSharp
             "TARJETA DEBITO",
             "TARJETA CREDITO",
             "TRANSFERENCIA"});
-            this.cbMetodoPago.Location = new System.Drawing.Point(570, 77);
+            this.cbMetodoPago.Location = new System.Drawing.Point(574, 470);
             this.cbMetodoPago.Name = "cbMetodoPago";
             this.cbMetodoPago.Size = new System.Drawing.Size(267, 21);
             this.cbMetodoPago.TabIndex = 18;
             // 
             // tbDescripcion
             // 
-            this.tbDescripcion.Location = new System.Drawing.Point(651, 334);
+            this.tbDescripcion.Location = new System.Drawing.Point(333, 9);
             this.tbDescripcion.Name = "tbDescripcion";
             this.tbDescripcion.Size = new System.Drawing.Size(59, 20);
             this.tbDescripcion.TabIndex = 19;
             this.tbDescripcion.Visible = false;
             // 
+            // lblfiltropornombre
+            // 
+            this.lblfiltropornombre.AutoSize = true;
+            this.lblfiltropornombre.Location = new System.Drawing.Point(495, 42);
+            this.lblfiltropornombre.Name = "lblfiltropornombre";
+            this.lblfiltropornombre.Size = new System.Drawing.Size(99, 13);
+            this.lblfiltropornombre.TabIndex = 20;
+            this.lblfiltropornombre.Text = "Buscar por nombre:";
+            // 
+            // tbBuscarCliente
+            // 
+            this.tbBuscarCliente.Location = new System.Drawing.Point(600, 40);
+            this.tbBuscarCliente.Name = "tbBuscarCliente";
+            this.tbBuscarCliente.Size = new System.Drawing.Size(335, 20);
+            this.tbBuscarCliente.TabIndex = 21;
+            this.tbBuscarCliente.TextChanged += new System.EventHandler(this.tbBuscarCliente_TextChanged);
+            // 
+            // tbNroPersonas
+            // 
+            this.tbNroPersonas.Location = new System.Drawing.Point(154, 371);
+            this.tbNroPersonas.Name = "tbNroPersonas";
+            this.tbNroPersonas.ReadOnly = true;
+            this.tbNroPersonas.Size = new System.Drawing.Size(168, 20);
+            this.tbNroPersonas.TabIndex = 23;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(84, 371);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(68, 13);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "NroPersonas";
+            // 
             // Pagos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(994, 450);
+            this.ClientSize = new System.Drawing.Size(963, 615);
+            this.Controls.Add(this.tbNroPersonas);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tbBuscarCliente);
+            this.Controls.Add(this.lblfiltropornombre);
             this.Controls.Add(this.tbDescripcion);
             this.Controls.Add(this.cbMetodoPago);
             this.Controls.Add(this.label2);
@@ -348,14 +399,19 @@ namespace UareUWindowsMSSQLCSharp
         private System.Windows.Forms.TextBox tbGrupo;
         private System.Windows.Forms.Label lblGrupo;
         private System.Windows.Forms.DataGridView dgvPaquetes;
+        private System.Windows.Forms.TextBox tbIdPaquete;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cbMetodoPago;
+        private System.Windows.Forms.TextBox tbDescripcion;
+        private System.Windows.Forms.Label lblfiltropornombre;
+        private System.Windows.Forms.TextBox tbBuscarCliente;
+        private System.Windows.Forms.TextBox tbNroPersonas;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridViewTextBoxColumn idPaquete;
         private System.Windows.Forms.DataGridViewTextBoxColumn grupo;
         private System.Windows.Forms.DataGridViewTextBoxColumn precio;
         private System.Windows.Forms.DataGridViewTextBoxColumn frecuencia;
         private System.Windows.Forms.DataGridViewTextBoxColumn descripcion;
-        private System.Windows.Forms.TextBox tbIdPaquete;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cbMetodoPago;
-        private System.Windows.Forms.TextBox tbDescripcion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nroPersonas;
     }
 }

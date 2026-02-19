@@ -53,7 +53,7 @@ namespace UareUWindowsMSSQLCSharp
             this.tbContrasena.Name = "tbContrasena";
             this.tbContrasena.PasswordChar = '*';
             this.tbContrasena.Size = new System.Drawing.Size(177, 20);
-            this.tbContrasena.TabIndex = 10;
+            this.tbContrasena.TabIndex = 2;
             this.tbContrasena.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbContrasena_KeyPress);
             // 
             // tbUsuario
@@ -61,7 +61,7 @@ namespace UareUWindowsMSSQLCSharp
             this.tbUsuario.Location = new System.Drawing.Point(33, 95);
             this.tbUsuario.Name = "tbUsuario";
             this.tbUsuario.Size = new System.Drawing.Size(177, 20);
-            this.tbUsuario.TabIndex = 9;
+            this.tbUsuario.TabIndex = 1;
             // 
             // lblContrasena
             // 
@@ -86,7 +86,7 @@ namespace UareUWindowsMSSQLCSharp
             this.btnIniciarSesion.Location = new System.Drawing.Point(33, 236);
             this.btnIniciarSesion.Name = "btnIniciarSesion";
             this.btnIniciarSesion.Size = new System.Drawing.Size(177, 77);
-            this.btnIniciarSesion.TabIndex = 6;
+            this.btnIniciarSesion.TabIndex = 3;
             this.btnIniciarSesion.Text = "Iniciar Sesion";
             this.btnIniciarSesion.UseVisualStyleBackColor = true;
             this.btnIniciarSesion.Click += new System.EventHandler(this.btnIniciarSesion_Click);

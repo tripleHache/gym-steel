@@ -37,22 +37,30 @@ namespace UareUWindowsMSSQLCSharp
                     conexion.Open();
 
                     // Crear el comando SQL
-                    string consulta = "SELECT pass FROM Usuarios WHERE nombre = '" + tbUsuario.Text + "'";
+                    string consulta = "SELECT pass, Rol, Usuario FROM Usuarios WHERE nombre = @usuario";
                     using (SqlCommand comando = new SqlCommand(consulta, conexion))
                     {
+                        comando.Parameters.AddWithValue("@usuario", tbUsuario.Text);
                         // Ejecutar la consulta y obtener el lector de datos
                         using (SqlDataReader lector = comando.ExecuteReader())
                         {
-                            while (lector.Read())
+                            if (lector.Read())
                             {
                                 string contrasena = lector.GetString(0);
 
                                 if (contrasena == tbContrasena.Text)
                                 {
+                                    UsuarioSesion.Nombre = lector["Usuario"].ToString();
+                                    UsuarioSesion.Rol = Convert.ToInt32(lector["Rol"]);
+
                                     this.Hide();
                                     MENU objMenu = new MENU();
                                     objMenu.ShowDialog();
-
+                                    this.Close();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Contraseña incorrecta");
                                 }
                             }
                         }
@@ -61,8 +69,8 @@ namespace UareUWindowsMSSQLCSharp
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error al consultar la base de datos: " + ex.Message);
-                MessageBox.Show(ex.Message);
+                //Console.WriteLine("Error al consultar la base de datos: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
 
